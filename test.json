@@ -1,0 +1,33 @@
+[{
+    "skillId": "10001",
+    "skillType": "AddWealth",
+    "value": "5"
+}, {
+    "skillId": "10002",
+    "skillType": "AddWealth",
+    "value": "50"
+}, {
+    "skillId": "10003",
+    "skillType": "AddWealth",
+    "value": "500"
+}, {
+    "skillId": "10004",
+    "skillType": "AddWealth_Per",
+    "value": "5"
+}, {
+    "skillId": "10005",
+    "skillType": "AddWealth_per",
+    "value": "2"
+}, {
+    "skillId": "10006",
+    "skillType": "AddExperience",
+    "value": "100"
+}, {
+    "skillId": "10007",
+    "skillType": "AddExperience",
+    "value": "200"
+}, {
+    "skillId": "10008",
+    "skillType": "AddExperience_per",
+    "value": "0.1"
+}]
