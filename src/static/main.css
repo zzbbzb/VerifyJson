@@ -1,0 +1,98 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+    /* overflow-x: auto; */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+.infoBar {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+}
+
+.infoBox {
+    border: black solid thin;
+    width: 80%;
+    height: 100%;
+    margin: 1% 1% 1% 1%;
+    /* overflow: auto; */
+    /* border-radius: 10px; */
+}
+
+#info {
+    position: relative;
+    /* border: black solid thin; */
+    width: 80%;
+    top: 28%;
+    left: 2%;
+}
+
+.tipBox {
+    width: 20%;
+    height: 100%;
+    margin: 1% 1% 1% 0;
+    /* border-radius: 10px; */
+}
+
+.bottomBar {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+}
+
+.savePath {
+    border: black solid thin;
+    width: 80%;
+    height: 100%;
+    margin: 0 1% 0 1%;
+}
+
+.save {
+    width: 20%;
+    height: 100%;
+    margin: 0% 1% 1% 0%;
+}
+
+.jsonContainer.hovering {
+    -webkit-box-shadow: inset 0px 0px 50px #BBB;
+    -moz-box-shadow: inset 0px 0px 50px #BBB;
+    -o-box-shadow: inset 0px 0px 50px #BBB;
+    box-shadow: inset 0px 0px 50px #BBB;
+}
+
+.jsonContainer {
+    border: medium black solid;
+    margin: 1% 1% 0% 1%;
+    height: 80%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#infoBox.error {
+    color: red;
+}
+
+#jsonDiv {
+    border: medium black solid;
+    width: 20%;
+    height: 40%;
+    /* flex-grow: 1; */
+    margin: 2% 2% 0% 2%;
+    overflow: auto;
+    box-shadow: 10px 10px 5px #888888;
+}

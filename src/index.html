@@ -13,134 +13,39 @@
     <script src="static/bootstrap.min.js"></script>
     <script src="static/bootstrap.bundle.min.js"></script> -->
 
-    <style>
-        .container {
-            border: medium black solid;
-            padding: 0 20px 30px;
-            min-height: 500px;
-        }
-        
-        .container.hovering {
-            -webkit-box-shadow: inset 0px 0px 50px #BBB;
-            -moz-box-shadow: inset 0px 0px 50px #BBB;
-            -o-box-shadow: inset 0px 0px 50px #BBB;
-            box-shadow: inset 0px 0px 50px #BBB;
-        }
-        
-        .msg {
-            border: medium black solid;
-            padding: 0 20px 30px;
-            margin: 20px 0;
-            min-height: 100px;
-        }
-        
-        #info.error {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="static/main.css" />
 
 </head>
 
 
 <body>
     <div class="container">
+        <div class="infoBar">
+            <div class="infoBox" id="infoBox">
+                <label class="info" for="info" id="info"></label>
+            </div>
+            <button class="tipBox" id="tipBox">
+                提示
+            </button>
+        </div>
+        <div class="jsonContainer" id="jsonContainer">
 
+        </div>
+        <div class="bottomBar">
+            <input type="file" name="" class="savePath" id="savePath"></input>
+            <button class="save" id="save">保存</button>
+        </div>
     </div>
-    <div class="msg">
+    <!-- <div class="msgs">
+        <div class="info" id="info"></div>
         <p id="fixedMsg">1.拖动放入文件 2.如果显示为空或者有数据为undefined,注意下json中的格式</p>
         <p id="info"></p>
     </div>
+    <div class="container">
 
+    </div> -->
 
-    <script>
-        var dropZone = document.getElementsByClassName('container')[0];
-        var info = document.getElementById('info');
-        // var infoJson;
-
-        function handleFileDragStart(e) {
-            e.stopPropagation();
-            e.preventDefault();
-        }
-
-        function handleFileDragEnter(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            this.classList.add('hovering');
-        }
-
-        function handleFileDragLeave(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            this.classList.remove('hovering');
-        }
-
-        function handleFileDragOver(e) {
-            e.stopPropagation();
-            e.preventDefault();
-        }
-
-        function handleFileDrop(e) { // TODO 代码优化
-            e.stopPropagation();
-            e.preventDefault();
-            this.classList.remove('hovering');
-
-            info.classList.remove('error');
-            info.innerHTML = "";
-
-            var files = e.dataTransfer.files;
-            var outputStr = [];
-            // 放入一个文件
-            if (files.length > 1) {
-                info.classList.add('error');
-                info.innerHTML = "只能放入一个文件";
-                return;
-            }
-            // 判断文件是json结尾
-            var pattern = /.json/i;
-            var file = files[0];
-            if (!pattern.test(file.name)) {
-                info.classList.add('error');
-                info.innerHTML = "需要放入一个.json结尾文件";
-                return;
-            }
-
-            // json解析
-            var reader = new FileReader();
-            reader.readAsText(file, 'utf-8');
-
-            reader.onerror = function() {
-                info.innerHTML = "不能读取文件, 错误编码 " +
-                    reader.error.code;
-            };
-            reader.onprogress = function(event) {
-                if (event.lengthComputable) {
-                    info.innerHTML = event.loaded + "/" + event.total + " ";
-                }
-            };
-            reader.onload = function() {
-                var fileText = reader.result;
-                // var jsonText = JSON.stringify(fileText);
-                var infoJson = JSON.parse(fileText);
-                info.innerHTML += "成功读取文件"
-                var str = "";
-
-                for (var i = 0; i < infoJson.length; i++) {
-                    str += infoJson[i].skillId + "<br/>";
-                    str += infoJson[i].skillType + "<br/>";
-                    str += infoJson[i].value + "<br/>";
-                    str += "=================" + "<br/>";
-                }
-                dropZone.innerHTML = str;
-            };
-
-            // TODO 进行布局
-        };
-
-        dropZone.addEventListener('dragenter', handleFileDragEnter, false);
-        dropZone.addEventListener('dragleave', handleFileDragLeave, false);
-        dropZone.addEventListener('dragover', handleFileDragOver, false);
-        dropZone.addEventListener('drop', handleFileDrop, false);
-    </script>
+    <script type="text/javascript" src="static/main.js"></script>
 </body>
 
 </html>

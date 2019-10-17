@@ -1,7 +1,16 @@
 [{
     "skillId": "10001",
     "skillType": "AddWealth",
-    "value": "5"
+    "value": "5",
+    "value1": "5",
+    "value2": "5",
+    "value3": "5",
+    "value4": "5",
+    "value5": "5",
+    "value6": "5",
+    "value7": "5",
+    "value8": "5",
+    "value9": "5"
 }, {
     "skillId": "10002",
     "skillType": "AddWealth",
