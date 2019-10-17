@@ -20,11 +20,19 @@
 
 <body>
     <div class="container">
+        <div class="shade" id="tipShade">
+            <div class="wbox" id="tipWbox">
+                <div id="boxHeader">
+                    <span>提示</span>
+                    <div id="close" onclick="TipShadeHidden()">x</div>
+                </div>
+            </div>
+        </div>
         <div class="infoBar">
             <div class="infoBox" id="infoBox">
                 <label class="info" for="info" id="info"></label>
             </div>
-            <button class="tipBox" id="tipBox">
+            <button class="tipBox" id="tipBox" onclick="ShowTipWbox()"> 
                 提示
             </button>
         </div>

@@ -106,3 +106,20 @@ dropZone.addEventListener('dragenter', handleFileDragEnter, false);
 dropZone.addEventListener('dragleave', handleFileDragLeave, false);
 dropZone.addEventListener('dragover', handleFileDragOver, false);
 dropZone.addEventListener('drop', handleFileDrop, false);
+
+document.getElementById('tipShade').style.display = "none";
+
+document.getElementById('tipWbox').addEventListener('click', closeClickWindow, false);
+document.getElementById('tipShade').addEventListener('click', TipShadeHidden, false);
+
+function ShowTipWbox() {
+    document.getElementById('tipShade').style.display = "";
+}
+
+function closeClickWindow(event) {
+    event.stopPropagation();
+}
+
+function TipShadeHidden(event) {
+    document.getElementById('tipShade').style.display = "none";
+}

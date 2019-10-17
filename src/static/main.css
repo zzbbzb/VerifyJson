@@ -96,3 +96,38 @@ body {
     overflow: auto;
     box-shadow: 10px 10px 5px #888888;
 }
+
+.shade {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .7);
+    /* opacity: 0.5; */
+}
+
+.wbox {
+    position: relative;
+    background: #fff;
+    width: 50%;
+    height: 80%;
+    border-radius: 5px;
+    margin: 5% auto;
+}
+
+#boxHeader {
+    height: 40px;
+}
+
+#close {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    background: red;
+    color: #fff;
+    right: 5px;
+    top: 5px;
+    text-align: center;
+}
