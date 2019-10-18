@@ -23,8 +23,11 @@
         <div class="shade" id="tipShade">
             <div class="wbox" id="tipWbox">
                 <div id="boxHeader">
-                    <span>提示</span>
+                    <span>提示框</span>
                     <div id="close" onclick="TipShadeHidden()">x</div>
+                </div>
+                <div id="boxContainer">
+                    1. 要拖动.json结尾的文件
                 </div>
             </div>
         </div>
@@ -40,8 +43,8 @@
 
         </div>
         <div class="bottomBar">
-            <input type="file" name="" class="savePath" id="savePath"></input>
-            <button class="save" id="save">保存</button>
+            <!-- <input type="file" name="" class="savePath" id="savePath"></input> -->
+            <button class="save" id="save" onclick="SaveJson()">保存</button>
         </div>
     </div>
     <!-- <div class="msgs">
