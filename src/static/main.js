@@ -76,7 +76,7 @@ function handleFileDrop(e) { // TODO 代码优化
         var fileText = reader.result;
         // var jsonText = JSON.stringify(fileText);
         infoJson = JSON.parse(fileText);
-        info.innerHTML = "成功读取文件,共" + GetJsonLength() + "个";
+        info.innerHTML = "成功读取文件,共" + GetJsonLength(infoJson) + "个";
         var str = "";
         // dropZone.innerHTML = str;
 
@@ -85,23 +85,40 @@ function handleFileDrop(e) { // TODO 代码优化
     };
 };
 
-function GetJsonLength() {
-    if (infoJson.length == undefined) {
+function GetJsonLength(json) {
+    if (typeof(json) == 'number') {
+        return 1;
+    } else if (json.length == undefined) {
         var count = 0;
-        for (var key in infoJson) {
+        for (var key in json) {
             count++;
         }
         return count;
     } else {
-        return infoJson.length;
+        return json.length;
     }
 }
 
+function WriteInfo(msg, errorFlag) {
+
+    info.classList.remove('error');
+    info.innerHTML = "";
+    if (errorFlag) {
+        info.classList.add('error');
+    }
+
+    info.innerHTML = msg;
+}
+
 function GetJsonType(json) {
-    if (json.length == undefined) {
-        return 1; // 类
+    if (typeof(json) == 'string') {
+        return 'string';
+    } else if (typeof(json) == "number") {
+        return 'number';
+    } else if (json.length == undefined) {
+        return 'Object'; // 类
     } else {
-        return 0; // 数组
+        return 'Array'; // 数组
     }
 }
 
@@ -113,47 +130,96 @@ function JsonLayout() {
 
     // TODO 布局优化,适应各种json
 
-    if (GetJsonType(infoJson) == 0) {
-        for (var i = 0; i < GetJsonLength(); i++) {
+    if (GetJsonType(infoJson) == 'Array') {
+        for (var i = 0; i < GetJsonLength(infoJson); i++) {
             html += "<div id='jsonDiv'>";
             html += "<div id='jsonHead'>";
-            html += "<button class='btn' id='btn_" + i + "' onclick='PressBtn(" + i + ")'>编辑</button>";
+            html += "<button class='btn' id='btn" + i + "' onclick='PressBtn(" + i + ")'>编辑</button>";
             html += "</div>";
             html += "<div id='singleContainer'>";
             // 进行布局
             for (var key in infoJson[i]) {
-                html += "<lable for='" + key + "_" + i + "'><b>" + key + ":</b></lable>" +
-                    "  <input id='" + key + "_" + i + "' type='text' value='" + infoJson[i][key] + "' readonly='readonly' disabled='disabled'><br/>";
+                html += "<lable for='" + key + i + "'><b>" + key + ":</b></lable>";
+                var jsonType = GetJsonType(infoJson[i][key]);
+                if (jsonType == 'string' || jsonType == 'number') {
+                    html += " <input id='" + key + i + "' type='text' value='" + infoJson[i][key] + "' readonly='readonly' disabled='disabled'><br/>";
+                } else {
+                    var jsonLen = GetJsonLength(infoJson[i][key]);
+                    if (jsonLen == 0) {
+                        WriteInfo("json中数组不能为空", true);
+                        return;
+                    }
+
+                    var funcName = "";
+                    if (GetJsonType(infoJson[i][key][0]) == "Object") {
+                        funcName = "NextJsonObject(" + i + ")";
+                    } else {
+                        funcName = "NextJsonArray(" + i + ")";
+                    }
+
+                    html += " <button class='nextJsonBtn' id='" + key + i + "' onclick='" + funcName + "' >展开</button><br/>"
+                }
             }
             html += "</div>";
             html += "</div>";
         }
     }
+    // else {
+    //     html += "<div id='jsonDiv'>";
+    //     html += "<div id='jsonHead'>";
+    //     html += "<button class='btn' id='btn_" + i + "' onclick='PressBtn(" + i + ")'>编辑</button>";
+    //     html += "</div>";
+    //     html += "<div id='singleContainer'>";
+    //     // 进行布局
+    //     for (var key in infoJson) {
+    //         html += "<lable for='" + key + "_" + i + "'><b>" + key + ":</b></lable>";
+    //         var jsonType = GetJsonType(infoJson[key]);
+    //         if (jsonType == 'string' || jsonType == 'number') {
+    //             html += " <input id='" + key + "_" + i + "' type='text' value='" + infoJson[key] + "' readonly='readonly' disabled='disabled'><br/>";
+    //         } else {
+    //             html += " <button class='nextJsonBtn' id='" + key + i + "' >展开</button><br/>"
+    //         }
+    //     }
+    //     html += "</div>";
+    //     html += "</div>";
+    // }
     dropZone.innerHTML = html;
-};
+}
+
+// var array_string_number_html = "<"
 
 function PressBtn(i) {
-    var btnName = "btn_" + i;
+
+    // for(var i = 0; i < arguments.length; i++)
+    // {
+
+    // }
+    var btnName = "btn" + i;
 
     var btn = document.getElementById(btnName);
     if (btn.innerText == '编辑') {
         for (var key in infoJson[i]) {
-            var keyName = key + "_" + i;
+            var keyName = key + i;
             document.getElementById(keyName).removeAttribute('readonly');
             document.getElementById(keyName).removeAttribute('disabled');
         }
         btn.innerText = '完成';
     } else if (btn.innerText == '完成') {
         for (var key in infoJson[i]) {
-            var keyName = key + "_" + i;
-            document.getElementById(keyName).readOnly = "readonly";
-            document.getElementById(keyName).disabled = "disabled";
+            var keyName = key + i;
+            var jsonType = GetJsonType(infoJson[i][key]);
+            if (jsonType == 'string' || jsonType == 'number') {
+                document.getElementById(keyName).readOnly = "readonly";
+                document.getElementById(keyName).disabled = "disabled";
+            }
         }
 
         for (var key in infoJson[i]) {
-            var keyName = key + "_" + i;
-            var jsonValue = document.getElementById(keyName).value;
-            infoJson[i][key] = jsonValue;
+            var keyName = key + i;
+            if (jsonType == 'string' || jsonType == 'number') {
+                var jsonValue = document.getElementById(keyName).value;
+                infoJson[i][key] = jsonValue;
+            }
         }
         btn.innerText = '编辑';
     }
@@ -195,4 +261,12 @@ function closeClickWindow(event) {
 
 function TipShadeHidden(event) {
     document.getElementById('tipShade').style.display = "none";
+}
+
+function NextJsonArray(key) {
+    console.log('Array' + key);
+}
+
+function NextJsonObject(key) {
+    console.log('Object' + key);
 }

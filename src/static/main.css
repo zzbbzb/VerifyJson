@@ -85,7 +85,7 @@ body {
     flex-wrap: wrap;
 }
 
-#infoBox.error {
+#info.error {
     color: red;
 }
 

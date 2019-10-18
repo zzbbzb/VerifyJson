@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        .shade {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .0);
+        }
+        
+        .wbox {
+            position: relative;
+            background: #fff;
+            width: 50%;
+            height: 40%;
+            border-radius: 5px;
+            margin: 5% auto;
+            border: black solid medium;
+        }
+        
+        #boxHeader {
+            height: 40px;
+            background: #888888;
+            border-radius: 2px 2px 0px 0px;
+        }
+        
+        #boxHeader>span {
+            position: relative;
+            /* border: black solid thin; */
+            top: 6px;
+            left: 2%;
+        }
+        
+        #close {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 5px;
+            background: red;
+            color: #fff;
+            right: 5px;
+            top: 6px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="tipBox" id="tipBox" onclick="ShowTipWbox()"> 
+                提示
+            </button>
+    <div class="shade" id="tipShade">
+        <div class="wbox" id="tipWbox">
+            <div id="boxHeader">
+                <span>hello\t</span>
+                <div id="close" onclick="TipShadeHidden()">x</div>
+            </div>
+            <div id="boxContainer">
+
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('tipShade').style.display = "none";
+
+        document.getElementById('tipWbox').addEventListener('click', closeClickWindow, false);
+        document.getElementById('tipShade').addEventListener('click', TipShadeHidden, false);
+
+        function ShowTipWbox() {
+            document.getElementById('tipShade').style.display = "";
+        }
+
+        function closeClickWindow(event) {
+            event.stopPropagation();
+        }
+
+        function TipShadeHidden(event) {
+            document.getElementById('tipShade').style.display = "none";
+        }
+    </script>
+</body>
+
+</html>

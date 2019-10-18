@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var infoJson = {
+            "id": "1",
+            "hello": [1, 2, 3],
+            "tt": [{
+                "ttid": "10",
+                "ttValue": "10"
+            }, {
+                "ttid": "12",
+                "ttValue": "12"
+            }]
+        };
+
+        function GetJsonLength(json) {
+            if (typeof(json) == 'number') {
+                return 1;
+            } else if (json.length == undefined) {
+                var count = 0;
+                for (var key in json) {
+                    count++;
+                }
+                return count;
+            } else {
+                return json.length;
+            }
+        }
+
+        function GetJsonType(json) {
+            // if (test.hasOwnProperty('length'))
+            if (typeof(json) == 'string') {
+                return 'string';
+            } else if (typeof(json) == "number") {
+                return 'number';
+            } else if (json.length == undefined) {
+                return 'Object'; // 类
+            } else {
+                return 'Array'; // 数组
+            }
+        }
+
+        // console.log(typeof(infoJson));
+        console.log(GetJsonLength(infoJson));
+        console.log(GetJsonType(infoJson));
+        for (var key in infoJson) {
+            // console.log(typeof(infoJson[key]));
+            console.log(GetJsonLength(infoJson[key]));
+            console.log(GetJsonType(infoJson[key]));
+            if (GetJsonType(infoJson[key]) == 'Array') {
+                for (var v in infoJson[key]) {
+                    console.log(key + "," + GetJsonLength(infoJson[key][v]));
+                    console.log(key + "," + GetJsonType(infoJson[key][v]));
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

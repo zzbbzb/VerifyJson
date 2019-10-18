@@ -1,24 +1,25 @@
 [{
     "skillId": "10001",
     "skillType": "AddWealth",
-    "value": "5",
-    "value1": "5",
-    "value2": "5",
-    "value3": "5",
-    "value4": "5",
-    "value5": "5",
-    "value6": "5",
-    "value7": "5",
-    "value8": "5",
-    "value9": "5"
+    "value": ["5", "6", "7", "8"]
 }, {
     "skillId": "10002",
     "skillType": "AddWealth",
-    "value": "50"
+    "value": [{
+            "skillId": "10003",
+            "skillType": "AddWealth",
+            "value": "500"
+        },
+        {
+            "skillId": "10004",
+            "skillType": "AddWealth_Per",
+            "value": "5"
+        }
+    ]
 }, {
     "skillId": "10003",
     "skillType": "AddWealth",
-    "value": "500"
+    "value": "100"
 }, {
     "skillId": "10004",
     "skillType": "AddWealth_Per",
