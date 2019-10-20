@@ -89,25 +89,34 @@ body {
     color: red;
 }
 
-#jsonDiv {
+#cardDiv {
     border: thin black solid;
-    width: 20%;
-    height: 40%;
     /* flex-grow: 1; */
     margin: 2% 2% 0% 2%;
-    overflow: auto;
+    /* overflow: auto; */
     box-shadow: 10px 10px 5px #888888;
     display: flex;
     flex-direction: column;
 }
 
-#jsonHead {
+#cardSize_small {
+    width: 20%;
+    height: 40%;
+}
+
+#cardSize_big {
+    width: 100%;
+    height: 100%;
+}
+
+#cardHead {
     display: flex;
     justify-content: flex-end;
     border-block-end: solid thin black;
+    height: 20%;
 }
 
-.btn {
+.editBtn {
     margin: 5px;
 }
 
@@ -121,22 +130,26 @@ body {
 }
 
 .wbox {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     background: #fff;
     width: 50%;
-    height: 40%;
+    /* height: 40%; */
     border-radius: 5px;
     margin: 5% auto;
     border: black solid medium;
 }
 
 #boxHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     height: 40px;
     background: #888888;
     border-radius: 2px 2px 0px 0px;
 }
 
-#boxHeader>span {
+.boxHeaderName {
     position: relative;
     /* border: black solid thin; */
     top: 6px;
@@ -144,7 +157,7 @@ body {
 }
 
 #close {
-    position: absolute;
+    position: relative;
     width: 25px;
     height: 25px;
     border-radius: 5px;

@@ -4,6 +4,8 @@ var info = document.getElementById('info');
 var infoJson = undefined;
 var fileName = ".json";
 
+document.getElementById('shade').style.display = "none";
+
 function handleFileDragStart(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -132,11 +134,11 @@ function JsonLayout() {
 
     if (GetJsonType(infoJson) == 'Array') {
         for (var i = 0; i < GetJsonLength(infoJson); i++) {
-            html += "<div id='jsonDiv'>";
-            html += "<div id='jsonHead'>";
-            html += "<button class='btn' id='btn" + i + "' onclick='PressBtn(" + i + ")'>编辑</button>";
+            html += "<div id='cardDiv cardSize_small'>";
+            html += "<div id='cardHead'>";
+            html += "<button class='editBtn' id='editBtn" + i + "' onclick='PresEditBtn(" + i + ")'>编辑</button>";
             html += "</div>";
-            html += "<div id='singleContainer'>";
+            html += "<div id='cardContainer'>";
             // 进行布局
             for (var key in infoJson[i]) {
                 html += "<lable for='" + key + i + "'><b>" + key + ":</b></lable>";
@@ -152,9 +154,9 @@ function JsonLayout() {
 
                     var funcName = "";
                     if (GetJsonType(infoJson[i][key][0]) == "Object") {
-                        funcName = "NextJsonObject(" + i + ")";
+                        funcName = "NextJsonObject(" + infoJson[i][key] + ")";
                     } else {
-                        funcName = "NextJsonArray(" + i + ")";
+                        funcName = "NextJsonArray(" + infoJson[i][key] + ")";
                     }
 
                     html += " <button class='nextJsonBtn' id='" + key + i + "' onclick='" + funcName + "' >展开</button><br/>"
@@ -188,37 +190,34 @@ function JsonLayout() {
 
 // var array_string_number_html = "<"
 
-function PressBtn(i) {
+function PresEditBtn(keyIndex) {
 
-    // for(var i = 0; i < arguments.length; i++)
-    // {
-
-    // }
-    var btnName = "btn" + i;
+    var btnName = "editBtn" + keyIndex;
 
     var btn = document.getElementById(btnName);
     if (btn.innerText == '编辑') {
-        for (var key in infoJson[i]) {
-            var keyName = key + i;
+        for (var key in infoJson[keyIndex]) {
+            var keyName = key + keyIndex;
             document.getElementById(keyName).removeAttribute('readonly');
             document.getElementById(keyName).removeAttribute('disabled');
         }
         btn.innerText = '完成';
     } else if (btn.innerText == '完成') {
-        for (var key in infoJson[i]) {
-            var keyName = key + i;
-            var jsonType = GetJsonType(infoJson[i][key]);
+        for (var key in infoJson[keyIndex]) {
+            var keyName = key + keyIndex;
+            var jsonType = GetJsonType(infoJson[keyIndex][key]);
             if (jsonType == 'string' || jsonType == 'number') {
                 document.getElementById(keyName).readOnly = "readonly";
                 document.getElementById(keyName).disabled = "disabled";
             }
         }
 
-        for (var key in infoJson[i]) {
-            var keyName = key + i;
+        for (var key in infoJson[keyIndex]) {
+            var keyName = key + keyIndex;
+            var jsonType = GetJsonType(infoJson[keyIndex][key]);
             if (jsonType == 'string' || jsonType == 'number') {
                 var jsonValue = document.getElementById(keyName).value;
-                infoJson[i][key] = jsonValue;
+                infoJson[keyIndex][key] = jsonValue;
             }
         }
         btn.innerText = '编辑';
@@ -226,12 +225,6 @@ function PressBtn(i) {
 }
 
 function SaveJson() {
-    // var content = "这是直接使用HTML5进行导出的";
-    // var blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    // saveAs(blob, "file.txt");
-    // function createAndDownloadFile(fileName, content) {
-
-    // }
     var aTag = document.createElement('a');
     var jsonStr = JSON.stringify(infoJson);
     var blob = new Blob([jsonStr]);
@@ -246,24 +239,53 @@ dropZone.addEventListener('dragleave', handleFileDragLeave, false);
 dropZone.addEventListener('dragover', handleFileDragOver, false);
 dropZone.addEventListener('drop', handleFileDrop, false);
 
-document.getElementById('tipShade').style.display = "none";
 
-document.getElementById('tipWbox').addEventListener('click', closeClickWindow, false);
-document.getElementById('tipShade').addEventListener('click', TipShadeHidden, false);
+
+// document.getElementById('tipWbox').addEventListener('click', closeClickWindow, false);
+// document.getElementById('tipShade').addEventListener('click', TipShadeHidden, false);
 
 function ShowTipWbox() {
-    document.getElementById('tipShade').style.display = "";
+    document.getElementById('shade').style.display = "";
 }
 
-function closeClickWindow(event) {
-    event.stopPropagation();
-}
+// function closeClickWindow(event) {
+//     event.stopPropagation();
+// }
 
 function TipShadeHidden(event) {
-    document.getElementById('tipShade').style.display = "none";
+    document.getElementById('shade').style.display = "none";
 }
 
-function NextJsonArray(key) {
+function NextJsonArray(fKey, json) {
+    var html = "";
+    var type = GetJsonType(json[0]);
+
+    html += "<div class='shade' id='shade'>";
+    html += "<div class='wbox'>";
+    html += "<div id='boxHeader'>";
+    html += "<div class='boxHeaderName'>" + fKey + "</div>";
+    html += "<div id='close' onclick='TipShadeHidden()'>x</div>";
+    html += "</div>";
+    html += "<div id='boxContainer' class='boxContainer'>";
+
+    html += "<div id='cardDiv cardSize_big'>";
+    html += "<div id='cardHead'>";
+    html += "<button class='editBtn' id='editBtn' onclick='PresEditBtn()'>编辑</button>";
+    html += "</div>";
+    html += "<div id='cardContainer' class='cardContainer_overflow'>";
+    // 进行布局
+    for (var key in json) {
+        // if (type == 'number') {
+        //     key = parseInt(key);
+        // }
+        html += " <input id='" + key + "' type='text' value='" + json[key] + "' readonly='readonly' disabled='disabled'>";
+    }
+    html += "</div>";
+    html += "</div>";
+    html += "</div>";
+    html += "</div>";
+
+    dropZone.innerHTML = html;
     console.log('Array' + key);
 }
 
