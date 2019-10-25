@@ -1,62 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset='UTF-8'>
     <title>Document</title>
-    <!-- <link rel="stylesheet" href="static/bootstrap.min.css" /> -->
+    <!-- <link rel='stylesheet' href='static/bootstrap.min.css' /> -->
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- <script src="static/jquery-3.4.1.slim.min.js"></script>
-    <script src="static/popper.min.js"></script>
-    <script src="static/bootstrap.min.js"></script>
-    <script src="static/bootstrap.bundle.min.js"></script> -->
+    <!-- <script src='static/jquery-3.4.1.slim.min.js'></script>
+    <script src='static/popper.min.js'></script>
+    <script src='static/bootstrap.min.js'></script>
+    <script src='static/bootstrap.bundle.min.js'></script> -->
 
-    <link rel="stylesheet" href="static/main.css" />
+    <link rel='stylesheet' href='static/main.css' />
+    <link rel='stylesheet' href='static/popupWindow.css' />
 
+    <script src='static/popupWindow.js'></script>
 </head>
 
 
 <body>
-    <div class="container">
-        <div class="shade" id="shade">
-            <div class="wbox" id="wbox">
-                <div id="boxHeader">
-                    <div class="boxHeaderName">提示框</div>
-                    <div id="close" onclick="TipShadeHidden()">x</div>
-                </div>
-                <div id="boxContainer">
-                    1. 要拖动.json结尾的文件
-                </div>
+    <div id='boxes'></div>
+    <div class='container'>
+        <div class='infoBar'>
+            <div class='infoBox' id='infoBox'>
+                <label class='info' id='info'></label>
             </div>
-        </div>
-        <div class="infoBar">
-            <div class="infoBox" id="infoBox">
-                <label class="info" for="info" id="info"></label>
-            </div>
-            <button class="tipBox" id="tipBox" onclick="ShowTipWbox()"> 
+            <button class='tipBox' id='tipBox' onclick='ShowTipWbox()'> 
                 提示
             </button>
         </div>
-        <div class="jsonContainer" id="jsonContainer">
+        <div class='jsonContainer' id='jsonContainer'>
 
         </div>
-        <div class="bottomBar">
-            <!-- <input type="file" name="" class="savePath" id="savePath"></input> -->
-            <button class="save" id="save" onclick="SaveJson()">保存</button>
+        <div class='bottomBar'>
+            <!-- <input type='file' name='' class='savePath' id='savePath'></input> -->
+            <button class='save' id='save' onclick='SaveJson()'>保存</button>
         </div>
     </div>
-    <!-- <div class="msgs">
-        <div class="info" id="info"></div>
-        <p id="fixedMsg">1.拖动放入文件 2.如果显示为空或者有数据为undefined,注意下json中的格式</p>
-        <p id="info"></p>
-    </div>
-    <div class="container">
 
-    </div> -->
-
-    <script type="text/javascript" src="static/main.js"></script>
+    <script type='text/javascript' src='static/main.js'></script>
 </body>
 
 </html>

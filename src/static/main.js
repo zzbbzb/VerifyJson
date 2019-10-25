@@ -4,8 +4,6 @@ var info = document.getElementById('info');
 var infoJson = undefined;
 var fileName = ".json";
 
-document.getElementById('shade').style.display = "none";
-
 function handleFileDragStart(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -113,14 +111,16 @@ function WriteInfo(msg, errorFlag) {
 }
 
 function GetJsonType(json) {
-    if (typeof(json) == 'string') {
-        return 'string';
-    } else if (typeof(json) == "number") {
-        return 'number';
-    } else if (json.length == undefined) {
-        return 'Object'; // 类
+
+    console.log(typeof(json));
+    if (typeof(json) == 'object') {
+        if (json instanceof Array) {
+            return 'Array';
+        } else {
+            return 'Object';
+        }
     } else {
-        return 'Array'; // 数组
+        return typeof(json);
     }
 }
 
@@ -130,65 +130,51 @@ function JsonLayout() {
         return;
     }
 
-    // TODO 布局优化,适应各种json
-
-    if (GetJsonType(infoJson) == 'Array') {
-        for (var i = 0; i < GetJsonLength(infoJson); i++) {
-            html += "<div id='cardDiv cardSize_small'>";
-            html += "<div id='cardHead'>";
-            html += "<button class='editBtn' id='editBtn" + i + "' onclick='PresEditBtn(" + i + ")'>编辑</button>";
-            html += "</div>";
-            html += "<div id='cardContainer'>";
-            // 进行布局
-            for (var key in infoJson[i]) {
-                html += "<lable for='" + key + i + "'><b>" + key + ":</b></lable>";
-                var jsonType = GetJsonType(infoJson[i][key]);
-                if (jsonType == 'string' || jsonType == 'number') {
-                    html += " <input id='" + key + i + "' type='text' value='" + infoJson[i][key] + "' readonly='readonly' disabled='disabled'><br/>";
-                } else {
-                    var jsonLen = GetJsonLength(infoJson[i][key]);
-                    if (jsonLen == 0) {
-                        WriteInfo("json中数组不能为空", true);
-                        return;
-                    }
-
-                    var funcName = "";
-                    if (GetJsonType(infoJson[i][key][0]) == "Object") {
-                        funcName = "NextJsonObject(" + infoJson[i][key] + ")";
-                    } else {
-                        funcName = "NextJsonArray(" + infoJson[i][key] + ")";
-                    }
-
-                    html += " <button class='nextJsonBtn' id='" + key + i + "' onclick='" + funcName + "' >展开</button><br/>"
-                }
-            }
-            html += "</div>";
-            html += "</div>";
-        }
+    if (GetJsonType(infoJson) != 'Array') {
+        WriteInfo("json要是数组json,最外层加个[]", true);
+        return;
     }
-    // else {
-    //     html += "<div id='jsonDiv'>";
-    //     html += "<div id='jsonHead'>";
-    //     html += "<button class='btn' id='btn_" + i + "' onclick='PressBtn(" + i + ")'>编辑</button>";
-    //     html += "</div>";
-    //     html += "<div id='singleContainer'>";
-    //     // 进行布局
-    //     for (var key in infoJson) {
-    //         html += "<lable for='" + key + "_" + i + "'><b>" + key + ":</b></lable>";
-    //         var jsonType = GetJsonType(infoJson[key]);
-    //         if (jsonType == 'string' || jsonType == 'number') {
-    //             html += " <input id='" + key + "_" + i + "' type='text' value='" + infoJson[key] + "' readonly='readonly' disabled='disabled'><br/>";
-    //         } else {
-    //             html += " <button class='nextJsonBtn' id='" + key + i + "' >展开</button><br/>"
-    //         }
-    //     }
-    //     html += "</div>";
-    //     html += "</div>";
-    // }
+    // TODO适应各种json
+    var keyPath = "";
+    for (var i = 0; i < GetJsonLength(infoJson); i++) {
+        keyPath = i + "";
+        html += "<div class='cardDiv cardSize_small'>";
+        html += "<div id='cardHead'>";
+        html += "<button class='editBtn' id='editBtn" + i + "' onclick='PresEditBtn(" + i + ")'>编辑</button>";
+        html += "</div>";
+        html += "<div id='cardContainer'>";
+        // 进行布局
+        for (var key in infoJson[i]) {
+
+            html += "<lable for='" + key + i + "'><b>" + key + ":</b></lable>";
+            var jsonType = GetJsonType(infoJson[i][key]);
+            if (jsonType == 'string' || jsonType == 'number') {
+                html += " <input id='" + key + i + "' type='text' value='" + infoJson[i][key] + "' readonly='readonly' disabled='disabled'><br/>";
+            } else {
+                keyPath += "/" + key;
+                var jsonLen = GetJsonLength(infoJson[i][key]);
+                if (jsonLen == 0) {
+                    WriteInfo("json中数组不能为空", true);
+                    return;
+                }
+
+                var funcName = "";
+                if (GetJsonType(infoJson[i][key]) == "Object") {
+                    funcName = 'NextJsonObject(" + infoJson[i][key] + ")';
+                } else {
+                    funcName = 'ShowArrayJson("' + keyPath + '",[' + infoJson[i][key] + '])';
+                }
+
+                html += " <button class='nextJsonBtn' id='" + key + i + "' onclick='" + funcName + "' >展开</button><br/>";
+            }
+        }
+        html += "</div>";
+        html += "</div>";
+    }
+
     dropZone.innerHTML = html;
 }
 
-// var array_string_number_html = "<"
 
 function PresEditBtn(keyIndex) {
 
@@ -240,52 +226,8 @@ dropZone.addEventListener('dragover', handleFileDragOver, false);
 dropZone.addEventListener('drop', handleFileDrop, false);
 
 
-
-// document.getElementById('tipWbox').addEventListener('click', closeClickWindow, false);
-// document.getElementById('tipShade').addEventListener('click', TipShadeHidden, false);
-
-function ShowTipWbox() {
-    document.getElementById('shade').style.display = "";
-}
-
-// function closeClickWindow(event) {
-//     event.stopPropagation();
-// }
-
-function TipShadeHidden(event) {
-    document.getElementById('shade').style.display = "none";
-}
-
 function NextJsonArray(fKey, json) {
-    var html = "";
-    var type = GetJsonType(json[0]);
 
-    html += "<div class='shade' id='shade'>";
-    html += "<div class='wbox'>";
-    html += "<div id='boxHeader'>";
-    html += "<div class='boxHeaderName'>" + fKey + "</div>";
-    html += "<div id='close' onclick='TipShadeHidden()'>x</div>";
-    html += "</div>";
-    html += "<div id='boxContainer' class='boxContainer'>";
-
-    html += "<div id='cardDiv cardSize_big'>";
-    html += "<div id='cardHead'>";
-    html += "<button class='editBtn' id='editBtn' onclick='PresEditBtn()'>编辑</button>";
-    html += "</div>";
-    html += "<div id='cardContainer' class='cardContainer_overflow'>";
-    // 进行布局
-    for (var key in json) {
-        // if (type == 'number') {
-        //     key = parseInt(key);
-        // }
-        html += " <input id='" + key + "' type='text' value='" + json[key] + "' readonly='readonly' disabled='disabled'>";
-    }
-    html += "</div>";
-    html += "</div>";
-    html += "</div>";
-    html += "</div>";
-
-    dropZone.innerHTML = html;
     console.log('Array' + key);
 }
 
