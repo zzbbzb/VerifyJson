@@ -25,6 +25,15 @@ function PWindow(content, title, options) {
                 }
             }
 
+            if (this.options.hasOwnProperty('cssBoxWidth')) {
+                var thisNode = document.getElementsByClassName("wbox");
+                thisNode[thisNode.length - 1].style.width = this.options.cssBoxWidth;
+            }
+
+            if (this.options.hasOwnProperty('cssBoxHeight')) {
+                var thisNode = document.getElementsByClassName("wbox");
+                thisNode[thisNode.length - 1].style.height = this.options.cssBoxHeight;
+            }
         }
     }
 };
@@ -39,10 +48,8 @@ function TipShadeHidden() {
 }
 
 function PathConvertToKey(keyPath) {
-    if (GetJsonType(keyPath) != 'string') {
-        return "key";
-    }
-    var keyLists = keyPath.split('/');
+
+    var keyLists = KeyPathConvertToList(keyPath);
     var key = "J";
 
     for (var i = 0; i < keyLists.length; i++) {
@@ -50,6 +57,14 @@ function PathConvertToKey(keyPath) {
     }
 
     return key;
+}
+
+function KeyPathConvertToList(keyPath) {
+    if (GetJsonType(keyPath) != 'string') {
+        return "key";
+    }
+    var keyLists = keyPath.split('/');
+    return keyLists;
 }
 
 /**
@@ -67,21 +82,109 @@ function ShowTipWbox() {
     for (var i = 0; i < tipContent.length; i++) {
         content += tipContent[i] + "<br>";
     }
-    var tipWindow = new PWindow(content, "提示", { onCloseShade: true });
+
+    var options = {
+        onCloseShade: true,
+        cssBoxWidth: '50%',
+        cssBoxHeight: '50%',
+    };
+    var tipWindow = new PWindow(content, "提示", options);
     tipWindow.Show();
 }
 
 /**
  * Array 显示框
  */
-function ShowArrayJson(keyPath, json) {
+function ShowArrayJson(keyPath) {
+
+    var pathLists = KeyPathConvertToList(keyPath);
+    var json = infoJson;
+    for (var key in pathLists) {
+        json = json[pathLists[key]];
+    }
+
     var html = "";
+    html += "<div class='cardDiv cardSize_big'>";
+    html += "<div id='cardHead'>";
+    html += "<button class='addBtn' id='addBtn' onclick='PressAddBtn()'>添加</button>";
+    var keyPathStr = '"' + keyPath + '"';
+    html += "<button class='editBtn' id='editBtn" + keyPath + "' onclick='PressEditBtn(" + keyPathStr + ")'>编辑</button>";
+    html += "</div>";
+    html += "<div id='cardContainer'>";
+
     // 进行布局
     for (var key in json) {
         var keyStr = PathConvertToKey(keyPath) + "_" + key;
-        html += " <input id='" + keyStr + "' type='text' value='" + json[key] + "' readonly='readonly' disabled='disabled'>";
+        html += " <input id='input_" + keyStr + "' type='text' value='" + json[key] + "' readonly='readonly' disabled='disabled'><br/>";
     }
 
-    var tipWindow = new PWindow(html, keyPath);
+    html += "</div>";
+    html += "</div>";
+
+    var options = {
+        cssBoxWidth: '80%',
+        cssBoxHeight: '80%',
+    };
+
+    var tipWindow = new PWindow(html, keyPath, options);
+    tipWindow.Show();
+}
+
+/**
+ * Object 显示框
+ */
+function ShowObjectJson(keyPath) {
+    var pathLists = KeyPathConvertToList(keyPath);
+    var json = infoJson;
+    for (var key in pathLists) {
+        json = json[pathLists[key]];
+    }
+
+    var html = "<div class='jsonContainer jsonContainer_margin_window jsonContainer_height_100' id='jsonContainer'>";
+    for (var i = 0; i < GetJsonLength(json); i++) {
+        var tmpkeyPath = keyPath + "/" + i.toString();
+        html += "<div class='cardDiv card_margin card_shadow cardSize_small'>";
+        html += "<div id='cardHead'>";
+        var keyPathStr = '"' + tmpkeyPath + '"';
+        html += "<button class='editBtn' id='editBtn" + tmpkeyPath + "' onclick='PressEditBtn(" + keyPathStr + ")'>编辑</button>";
+        html += "</div>";
+        html += "<div id='cardContainer'>";
+
+        // 进行布局
+        for (var key in json[i]) {
+            var keyStr = PathConvertToKey(tmpkeyPath) + "_" + key;
+            html += "<lable for='label_" + keyStr + "'><b>" + key + ":</b></lable>";
+            var jsonType = GetJsonType(json[i][key]);
+            if (jsonType == 'string' || jsonType == 'number') {
+                html += " <input id='input_" + keyStr + "' type='text' value='" + json[i][key] + "' readonly='readonly' disabled='disabled'><br/>";
+            } else {
+                var jsonLen = GetJsonLength(json[i][key]);
+                if (jsonLen == 0) {
+                    WriteInfo("json中数组不能为空", true);
+                    return;
+                }
+
+                var funcName = "";
+                if (GetJsonType(json[i][key][0]) == "Object") {
+                    var ttkeyPath = tmpkeyPath + "/" + key;
+                    funcName = 'ShowObjectJson("' + ttkeyPath + '")';
+                } else {
+                    var ttkeyPath = tmpkeyPath + "/" + key;
+                    funcName = 'ShowArrayJson("' + ttkeyPath + '")';
+                }
+
+                html += " <button class='nextJsonBtn' id='button_" + keyStr + "' onclick='" + funcName + "' >展开</button><br/>";
+            }
+        }
+        html += "</div>";
+        html += "</div>";
+    }
+    html += "</div>";
+    var options = {
+        cssBoxWidth: '80%',
+        cssBoxHeight: '80%',
+    };
+
+    var tipWindow = new PWindow(html, keyPath, options);
     tipWindow.Show();
 }

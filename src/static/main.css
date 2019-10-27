@@ -78,11 +78,25 @@ body {
 
 .jsonContainer {
     border: medium black solid;
-    margin: 1% 1% 0% 1%;
-    height: 80%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+}
+
+.jsonContainer_margin {
+    margin: 1% 1% 0% 1%;
+}
+
+.jsonContainer_margin_window {
+    margin: 1% 1% 1% 1%;
+}
+
+.jsonContainer_height_80 {
+    height: 80%;
+}
+
+.jsonContainer_height_100 {
+    height: 96%;
 }
 
 #info.error {
@@ -92,11 +106,17 @@ body {
 .cardDiv {
     border: thin black solid;
     /* flex-grow: 1; */
-    margin: 2% 2% 0% 2%;
     overflow: auto;
-    box-shadow: 10px 10px 5px #888888;
     display: flex;
     flex-direction: column;
+}
+
+.card_margin {
+    margin: 2% 2% 0% 2%;
+}
+
+.card_shadow {
+    box-shadow: 10px 10px 5px #888888;
 }
 
 .cardSize_small {
@@ -113,9 +133,67 @@ body {
     display: flex;
     justify-content: flex-end;
     border-block-end: solid thin black;
-    height: 15%;
+    /* height: 15%; */
 }
 
 .editBtn {
     margin: 5px;
+}
+
+.addBtn {
+    margin: 5px;
+}
+
+.shade {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 10;
+}
+
+.wbox {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    /* width: 50%;
+    height: 40%; */
+    border-radius: 5px;
+    margin: 5% auto;
+    border: black solid medium;
+}
+
+#boxHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 40px;
+    background: #888888;
+    border-radius: 2px 2px 0px 0px;
+}
+
+.boxHeaderName {
+    position: relative;
+    /* border: black solid thin; */
+    top: 6px;
+    left: 2%;
+}
+
+#close {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    background: red;
+    color: #fff;
+    right: 5px;
+    top: 6px;
+    text-align: center;
+}
+
+#boxContainer {
+    width: 100%;
+    height: 100%;
 }

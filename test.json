@@ -19,7 +19,23 @@
 }, {
     "skillId": "10003",
     "skillType": "AddWealth",
-    "value": "100"
+    "value": [{
+            "skillId": "10003",
+            "skillType": "AddWealth",
+            "value": ["1", "2", "3"]
+        },
+        {
+            "skillId": "10004",
+            "skillType": "AddWealth_Per",
+            "value": [{
+				"name":"zb",
+				"age":"13"
+			},{
+				"name":"zzbbzb",
+				"age":"14"
+			}]
+        }
+    ]
 }, {
     "skillId": "10004",
     "skillType": "AddWealth_Per",

@@ -137,21 +137,21 @@ function JsonLayout() {
     // TODO适应各种json
     var keyPath = "";
     for (var i = 0; i < GetJsonLength(infoJson); i++) {
-        keyPath = i + "";
-        html += "<div class='cardDiv cardSize_small'>";
+        keyPath = i.toString();
+        html += "<div class='cardDiv card_margin card_shadow cardSize_small'>";
         html += "<div id='cardHead'>";
-        html += "<button class='editBtn' id='editBtn" + i + "' onclick='PresEditBtn(" + i + ")'>编辑</button>";
+        var keyPathStr = '"' + keyPath + '"';
+        html += "<button class='editBtn' id='editBtn" + keyPath + "' onclick='PressEditBtn(" + keyPathStr + ")'>编辑</button>";
         html += "</div>";
         html += "<div id='cardContainer'>";
         // 进行布局
         for (var key in infoJson[i]) {
-
-            html += "<lable for='" + key + i + "'><b>" + key + ":</b></lable>";
+            var keyStr = PathConvertToKey(keyPath) + "_" + key;
+            html += "<lable for='label_" + keyStr + "'><b>" + key + ":</b></lable>";
             var jsonType = GetJsonType(infoJson[i][key]);
             if (jsonType == 'string' || jsonType == 'number') {
-                html += " <input id='" + key + i + "' type='text' value='" + infoJson[i][key] + "' readonly='readonly' disabled='disabled'><br/>";
+                html += " <input id='input_" + keyStr + "' type='text' value='" + infoJson[i][key] + "' readonly='readonly' disabled='disabled'><br/>";
             } else {
-                keyPath += "/" + key;
                 var jsonLen = GetJsonLength(infoJson[i][key]);
                 if (jsonLen == 0) {
                     WriteInfo("json中数组不能为空", true);
@@ -159,13 +159,15 @@ function JsonLayout() {
                 }
 
                 var funcName = "";
-                if (GetJsonType(infoJson[i][key]) == "Object") {
-                    funcName = 'NextJsonObject(" + infoJson[i][key] + ")';
+                if (GetJsonType(infoJson[i][key][0]) == "Object") {
+                    var tmpkeyPath = keyPath + "/" + key;
+                    funcName = 'ShowObjectJson("' + tmpkeyPath + '")';
                 } else {
-                    funcName = 'ShowArrayJson("' + keyPath + '",[' + infoJson[i][key] + '])';
+                    var tmpkeyPath = keyPath + "/" + key;
+                    funcName = 'ShowArrayJson("' + tmpkeyPath + '")';
                 }
 
-                html += " <button class='nextJsonBtn' id='" + key + i + "' onclick='" + funcName + "' >展开</button><br/>";
+                html += " <button class='nextJsonBtn' id='button_" + keyStr + "' onclick='" + funcName + "' >展开</button><br/>";
             }
         }
         html += "</div>";
@@ -176,34 +178,45 @@ function JsonLayout() {
 }
 
 
-function PresEditBtn(keyIndex) {
+function PressEditBtn(keyPath) {
 
-    var btnName = "editBtn" + keyIndex;
+    var pathLists = KeyPathConvertToList(keyPath);
+    var json = infoJson;
+    for (var key in pathLists) {
+        json = json[pathLists[key]];
+    }
 
+    console.log(json);
+
+    var btnName = "editBtn" + keyPath;
+    var keyPathStr = PathConvertToKey(keyPath);
     var btn = document.getElementById(btnName);
     if (btn.innerText == '编辑') {
-        for (var key in infoJson[keyIndex]) {
-            var keyName = key + keyIndex;
-            document.getElementById(keyName).removeAttribute('readonly');
-            document.getElementById(keyName).removeAttribute('disabled');
+        for (var key in json) {
+            var jsonType = GetJsonType(json[key]);
+            if (jsonType == 'string' || jsonType == 'number') {
+                var keyName = 'input_' + keyPathStr + '_' + key;
+                document.getElementById(keyName).removeAttribute('readonly');
+                document.getElementById(keyName).removeAttribute('disabled');
+            }
         }
         btn.innerText = '完成';
     } else if (btn.innerText == '完成') {
-        for (var key in infoJson[keyIndex]) {
-            var keyName = key + keyIndex;
-            var jsonType = GetJsonType(infoJson[keyIndex][key]);
+        for (var key in json) {
+            var jsonType = GetJsonType(json[key]);
             if (jsonType == 'string' || jsonType == 'number') {
+                var keyName = "input_" + keyPathStr + "_" + key;
                 document.getElementById(keyName).readOnly = "readonly";
                 document.getElementById(keyName).disabled = "disabled";
             }
         }
 
-        for (var key in infoJson[keyIndex]) {
-            var keyName = key + keyIndex;
-            var jsonType = GetJsonType(infoJson[keyIndex][key]);
+        for (var key in json) {
+            var keyName = "input_" + keyPathStr + "_" + key;
+            var jsonType = GetJsonType(json[key]);
             if (jsonType == 'string' || jsonType == 'number') {
                 var jsonValue = document.getElementById(keyName).value;
-                infoJson[keyIndex][key] = jsonValue;
+                json[key] = jsonValue;
             }
         }
         btn.innerText = '编辑';
@@ -224,13 +237,3 @@ dropZone.addEventListener('dragenter', handleFileDragEnter, false);
 dropZone.addEventListener('dragleave', handleFileDragLeave, false);
 dropZone.addEventListener('dragover', handleFileDragOver, false);
 dropZone.addEventListener('drop', handleFileDrop, false);
-
-
-function NextJsonArray(fKey, json) {
-
-    console.log('Array' + key);
-}
-
-function NextJsonObject(key) {
-    console.log('Object' + key);
-}
