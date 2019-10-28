@@ -231,3 +231,24 @@ function ShowConfirmDel(keyPath, delIndex, type) {
     var tipWindow = new PWindow(html, " ", options);
     tipWindow.Show();
 }
+
+/**
+ * 中间增加框
+ */
+function ShowAddJson() {
+
+}
+
+/**
+ * 增加Array
+ */
+function ShowAddArrayJson() {
+
+}
+
+/**
+ *增加Object
+ */
+function ShowAddObjectJson() {
+
+}
