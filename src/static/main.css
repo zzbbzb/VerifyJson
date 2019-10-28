@@ -15,58 +15,75 @@ body {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    justify-content: space-around;
 }
 
 .infoBar {
     display: flex;
     flex-direction: row;
-    height: 50px;
-}
-
-.infoBox {
-    border: black solid thin;
-    width: 80%;
-    height: 100%;
+    /* border: black solid medium; */
+    min-height: 50px;
     margin: 1% 1% 1% 1%;
-    /* overflow: auto; */
-    /* border-radius: 10px; */
 }
 
-#info {
-    position: relative;
-    /* border: black solid thin; */
-    width: 80%;
-    top: 28%;
-    left: 2%;
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
 }
 
-.tipBox {
-    width: 20%;
+.mainContainer_margin {
+    margin: 0% 1% 0% 1%;
+}
+
+.mainContainer_height {
+    height: 85%;
+}
+
+.mainContainer_height_window {
     height: 100%;
-    margin: 1% 1% 1% 0;
-    /* border-radius: 10px; */
+}
+
+.mainContainer_border {
+    border: black solid medium;
 }
 
 .bottomBar {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    height: 50px;
+    /* border: black solid medium; */
+    margin: 1% 1% 1% 1%;
+    min-height: 50px;
 }
 
-
-/* .savePath {
+.infoBox {
     border: black solid thin;
     width: 80%;
-    height: 100%;
-    margin: 0 1% 0 1%;
-} */
+    margin: 0px 10px 0px 0px;
+}
 
-.save {
+#info {
+    position: relative;
+    left: 20px;
+    top: 12px;
+    width: 80%;
+}
+
+.tipBox {
     width: 20%;
-    height: 100%;
-    margin: 0% 1% 1% 0%;
+    margin: 0px 0px 0px 0px;
+}
+
+.saveBtn {
+    width: 20%;
+    margin: 0px 0px 0px 0px;
+}
+
+.controlStrip {
+    display: flex;
+    justify-content: flex-end;
+    border-block-end: solid thin black;
+    height: 40px;
 }
 
 .jsonContainer.hovering {
@@ -77,26 +94,12 @@ body {
 }
 
 .jsonContainer {
-    border: medium black solid;
+    /* border: medium black solid; */
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-}
-
-.jsonContainer_margin {
-    margin: 1% 1% 0% 1%;
-}
-
-.jsonContainer_margin_window {
-    margin: 1% 1% 1% 1%;
-}
-
-.jsonContainer_height_80 {
-    height: 80%;
-}
-
-.jsonContainer_height_100 {
-    height: 96%;
+    overflow-x: auto;
+    height: 100%;
 }
 
 #info.error {
@@ -141,6 +144,15 @@ body {
 }
 
 .addBtn {
+    margin: 5px;
+}
+
+.addBtn_size {
+    width: 60px;
+    height: 30px;
+}
+
+.delBtn {
     margin: 5px;
 }
 

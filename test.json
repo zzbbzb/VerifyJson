@@ -56,4 +56,24 @@
     "skillId": "10008",
     "skillType": "AddExperience_per",
     "value": "0.1"
+}, {
+    "skillId": "10009",
+    "skillType": "AddToolsDrop",
+    "value": "100"
+}, {
+    "skillId": "10010",
+    "skillType": "AddToolsDrop_per",
+    "value": "0.5"
+}, {
+    "skillId": "10011",
+    "skillType": "AddToolsDrop_per",
+    "value": "0.8"
+}, {
+    "skillId": "10012",
+    "skillType": "AddToolsDrop_per",
+    "value": "1000"
+}, {
+    "skillId": "10013",
+    "skillType": "AddWealth",
+    "value": "1000"
 }]

@@ -140,12 +140,17 @@ function ShowObjectJson(keyPath) {
         json = json[pathLists[key]];
     }
 
-    var html = "<div class='jsonContainer jsonContainer_margin_window jsonContainer_height_100' id='jsonContainer'>";
+    var html = "<div class='mainContainer mainContainer_height_window'>" +
+        "<div class='controlStrip'>" +
+        "<button class='addBtn addBtn_size' id='addBtn'>添加</button>" +
+        "</div>" +
+        "<div class='jsonContainer' id='jsonContainer'>";
     for (var i = 0; i < GetJsonLength(json); i++) {
         var tmpkeyPath = keyPath + "/" + i.toString();
         html += "<div class='cardDiv card_margin card_shadow cardSize_small'>";
         html += "<div id='cardHead'>";
         var keyPathStr = '"' + tmpkeyPath + '"';
+        html += "<button class='delBtn' id='delBtn" + tmpkeyPath + "' onclick='PressDelBtn(" + keyPathStr + ")'>删除</button>";
         html += "<button class='editBtn' id='editBtn" + tmpkeyPath + "' onclick='PressEditBtn(" + keyPathStr + ")'>编辑</button>";
         html += "</div>";
         html += "<div id='cardContainer'>";
@@ -180,6 +185,8 @@ function ShowObjectJson(keyPath) {
         html += "</div>";
     }
     html += "</div>";
+    html += "</div>";
+
     var options = {
         cssBoxWidth: '80%',
         cssBoxHeight: '80%',

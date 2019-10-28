@@ -141,6 +141,7 @@ function JsonLayout() {
         html += "<div class='cardDiv card_margin card_shadow cardSize_small'>";
         html += "<div id='cardHead'>";
         var keyPathStr = '"' + keyPath + '"';
+        html += "<button class='delBtn' id='delBtn" + keyPath + "' onclick='PressDelBtn(" + keyPathStr + ")'>删除</button>";
         html += "<button class='editBtn' id='editBtn" + keyPath + "' onclick='PressEditBtn(" + keyPathStr + ")'>编辑</button>";
         html += "</div>";
         html += "<div id='cardContainer'>";
@@ -224,6 +225,10 @@ function PressEditBtn(keyPath) {
 }
 
 function SaveJson() {
+    if (typeof(infoJson) == 'undefined') {
+        WriteInfo("没有json文件", true);
+        return;
+    }
     var aTag = document.createElement('a');
     var jsonStr = JSON.stringify(infoJson);
     var blob = new Blob([jsonStr]);
