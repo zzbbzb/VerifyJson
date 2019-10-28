@@ -283,6 +283,8 @@ function PressConfirmDelBtn(keyPath, delIndex, type) {
 
     json.splice(Number(delIndex), 1);
 
+    WriteInfo("删除成功");
+
     console.log(json);
 
     // 刷新
