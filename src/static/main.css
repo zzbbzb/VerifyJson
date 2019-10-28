@@ -209,3 +209,13 @@ body {
     width: 100%;
     height: 100%;
 }
+
+.confirmDelBtnDiv {
+    display: flex;
+    justify-content: space-around;
+}
+
+.confirmDelBtnContent {
+    text-align: center;
+    margin: 20px;
+}

@@ -81,7 +81,7 @@ function handleFileDrop(e) { // TODO 代码优化
         // dropZone.innerHTML = str;
 
         // 进行布局
-        JsonLayout();
+        ShowMainJson();
     };
 };
 
@@ -124,7 +124,7 @@ function GetJsonType(json) {
     }
 }
 
-function JsonLayout() {
+function ShowMainJson() {
     var html = "";
     if (typeof(infoJson) == "undefined") {
         return;
@@ -134,14 +134,20 @@ function JsonLayout() {
         WriteInfo("json要是数组json,最外层加个[]", true);
         return;
     }
+
+    var type = "Main";
+    var typeStr = '"' + type + '"';
+
     // TODO适应各种json
     var keyPath = "";
+    var pKeyPath = '"' + keyPath + '"';
     for (var i = 0; i < GetJsonLength(infoJson); i++) {
         keyPath = i.toString();
         html += "<div class='cardDiv card_margin card_shadow cardSize_small'>";
         html += "<div id='cardHead'>";
         var keyPathStr = '"' + keyPath + '"';
-        html += "<button class='delBtn' id='delBtn" + keyPath + "' onclick='PressDelBtn(" + keyPathStr + ")'>删除</button>";
+        var delkeyStr = '"' + i + '"';
+        html += "<button class='delBtn' id='delBtn" + keyPath + "' onclick='PressDelBtn(" + pKeyPath + "," + delkeyStr + "," + typeStr + ")'>删除</button>";
         html += "<button class='editBtn' id='editBtn" + keyPath + "' onclick='PressEditBtn(" + keyPathStr + ")'>编辑</button>";
         html += "</div>";
         html += "<div id='cardContainer'>";
@@ -178,7 +184,28 @@ function JsonLayout() {
     dropZone.innerHTML = html;
 }
 
+function SaveJson() {
+    if (typeof(infoJson) == 'undefined') {
+        WriteInfo("没有json文件", true);
+        return;
+    }
+    var aTag = document.createElement('a');
+    var jsonStr = JSON.stringify(infoJson);
+    var blob = new Blob([jsonStr]);
+    aTag.download = fileName;
+    aTag.href = URL.createObjectURL(blob);
+    aTag.click();
+    URL.revokeObjectURL(blob);
+}
 
+dropZone.addEventListener('dragenter', handleFileDragEnter, false);
+dropZone.addEventListener('dragleave', handleFileDragLeave, false);
+dropZone.addEventListener('dragover', handleFileDragOver, false);
+dropZone.addEventListener('drop', handleFileDrop, false);
+
+/**
+ * 按下编辑键
+ */
 function PressEditBtn(keyPath) {
 
     var pathLists = KeyPathConvertToList(keyPath);
@@ -224,21 +251,49 @@ function PressEditBtn(keyPath) {
     }
 }
 
-function SaveJson() {
-    if (typeof(infoJson) == 'undefined') {
-        WriteInfo("没有json文件", true);
-        return;
-    }
-    var aTag = document.createElement('a');
-    var jsonStr = JSON.stringify(infoJson);
-    var blob = new Blob([jsonStr]);
-    aTag.download = fileName;
-    aTag.href = URL.createObjectURL(blob);
-    aTag.click();
-    URL.revokeObjectURL(blob);
+/**
+ * 按下删除键,弹出确认弹框
+ */
+function PressDelBtn(keyPath, delIndex, type) {
+    ShowConfirmDel(keyPath, delIndex, type);
 }
 
-dropZone.addEventListener('dragenter', handleFileDragEnter, false);
-dropZone.addEventListener('dragleave', handleFileDragLeave, false);
-dropZone.addEventListener('dragover', handleFileDragOver, false);
-dropZone.addEventListener('drop', handleFileDrop, false);
+/**
+ * 确认删除
+ */
+function PressConfirmDelBtn(keyPath, delIndex, type) {
+    // 关闭删除确认弹窗
+    TipShadeHidden();
+    console.log(keyPath);
+
+    var json = infoJson;
+    if (keyPath != "") {
+        var pathLists = KeyPathConvertToList(keyPath);
+        for (var key in pathLists) {
+            json = json[pathLists[key]];
+        }
+    }
+
+    console.log(json);
+
+    if (json.length == 1) {
+        WriteInfo("要留一个,不能全部删除", true);
+        return;
+    }
+
+    json.splice(Number(delIndex), 1);
+
+    console.log(json);
+
+    // 刷新
+    if (type == "Array") {
+        TipShadeHidden();
+        ShowArrayJson(keyPath);
+    } else if (type == "Object") {
+        TipShadeHidden();
+        ShowObjectJson(keyPath);
+    } else if (type == "Main") {
+        dropZone.innerHTML = "";
+        ShowMainJson();
+    }
+}

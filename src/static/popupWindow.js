@@ -112,10 +112,14 @@ function ShowArrayJson(keyPath) {
     html += "</div>";
     html += "<div id='cardContainer'>";
 
+    var type = "Array";
+    var typeStr = '"' + type + '"';
     // 进行布局
     for (var key in json) {
         var keyStr = PathConvertToKey(keyPath) + "_" + key;
-        html += " <input id='input_" + keyStr + "' type='text' value='" + json[key] + "' readonly='readonly' disabled='disabled'><br/>";
+        html += "<label>" + key + ":  </label><input id='input_" + keyStr + "' type='text' value='" + json[key] + "' readonly='readonly' disabled='disabled'>";
+        var delkeyStr = '"' + key + '"';
+        html += "<button class='delBtn' id='delBtn_" + keyStr + "' onclick='PressDelBtn(" + keyPathStr + "," + delkeyStr + "," + typeStr + ")'>删除" + key + "</button><br/>";
     }
 
     html += "</div>";
@@ -140,17 +144,22 @@ function ShowObjectJson(keyPath) {
         json = json[pathLists[key]];
     }
 
+    var type = "Object";
+    var typeStr = '"' + type + '"';
+
     var html = "<div class='mainContainer mainContainer_height_window'>" +
         "<div class='controlStrip'>" +
         "<button class='addBtn addBtn_size' id='addBtn'>添加</button>" +
         "</div>" +
         "<div class='jsonContainer' id='jsonContainer'>";
+    var pKeyPath = '"' + keyPath + '"';
     for (var i = 0; i < GetJsonLength(json); i++) {
         var tmpkeyPath = keyPath + "/" + i.toString();
         html += "<div class='cardDiv card_margin card_shadow cardSize_small'>";
         html += "<div id='cardHead'>";
         var keyPathStr = '"' + tmpkeyPath + '"';
-        html += "<button class='delBtn' id='delBtn" + tmpkeyPath + "' onclick='PressDelBtn(" + keyPathStr + ")'>删除</button>";
+        var delkeyStr = '"' + i + '"';
+        html += "<button class='delBtn' id='delBtn" + tmpkeyPath + "' onclick='PressDelBtn(" + pKeyPath + "," + delkeyStr + "," + typeStr + ")'>删除</button>";
         html += "<button class='editBtn' id='editBtn" + tmpkeyPath + "' onclick='PressEditBtn(" + keyPathStr + ")'>编辑</button>";
         html += "</div>";
         html += "<div id='cardContainer'>";
@@ -193,5 +202,32 @@ function ShowObjectJson(keyPath) {
     };
 
     var tipWindow = new PWindow(html, keyPath, options);
+    tipWindow.Show();
+}
+
+/**
+ * 删除确认弹窗
+ */
+function ShowConfirmDel(keyPath, delIndex, type) {
+
+    // TODO 优化删除确认弹窗布局
+    var html = "";
+    var keyPathStr = '"' + keyPath + '"';
+    var delIndexStr = '"' + delIndex + '"';
+    var typeStr = '"' + type + '"';
+
+    html += "<div class='confirmDelBtnContent'>";
+    html += "<label>是否要删除</label><br>";
+    html += "</div>";
+    html += "<div class='confirmDelBtnDiv'>"
+    html += "<button onclick='PressConfirmDelBtn(" + keyPathStr + ", " + delIndexStr + ", " + typeStr + ")'>是</button>";
+    html += "<button onclick='TipShadeHidden()'>否</button>";
+    html += "</div>";
+    var options = {
+        cssBoxWidth: '40%',
+        cssBoxHeight: '20%',
+    };
+
+    var tipWindow = new PWindow(html, " ", options);
     tipWindow.Show();
 }
