@@ -409,7 +409,8 @@ function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
             }
             addJson = input.value;
             json.push(addJson);
-            if (mainFlag) {
+            if (mainFlag === 'true') {
+                TipShadeHidden();
                 dropZone.innerHTML = "";
                 ShowMainJson();
             } else {
@@ -460,7 +461,7 @@ function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
             }
 
             json.push(addJson);
-            if (mainFlag) {
+            if (mainFlag === 'true') {
                 TipShadeHidden();
                 dropZone.innerHTML = "";
                 ShowMainJson();
