@@ -146,13 +146,14 @@ function ShowObjectJson(keyPath) {
 
     var type = "Object";
     var typeStr = '"' + type + '"';
+    var pKeyPath = '"' + keyPath + '"';
 
     var html = "<div class='mainContainer mainContainer_height_window'>" +
         "<div class='controlStrip'>" +
-        "<button class='addBtn addBtn_size' id='addBtn'>添加</button>" +
+        "<button class='addBtn addBtn_size' id='addBtn' onclick='PressAddBtn(" + pKeyPath + ")'>添加</button>" +
         "</div>" +
         "<div class='jsonContainer' id='jsonContainer'>";
-    var pKeyPath = '"' + keyPath + '"';
+
     for (var i = 0; i < GetJsonLength(json); i++) {
         var tmpkeyPath = keyPath + "/" + i.toString();
         html += "<div class='cardDiv card_margin card_shadow cardSize_small'>";
@@ -210,7 +211,6 @@ function ShowObjectJson(keyPath) {
  */
 function ShowConfirmDel(keyPath, delIndex, type) {
 
-    // TODO 优化删除确认弹窗布局
     var html = "";
     var keyPathStr = '"' + keyPath + '"';
     var delIndexStr = '"' + delIndex + '"';
@@ -235,15 +235,54 @@ function ShowConfirmDel(keyPath, delIndex, type) {
 /**
  * 中间增加框
  */
-function ShowAddJson() {
+function ShowAddJson(keyPath, json) {
 
+    var keyPathStr = '"' + keyPath + '"';
+    console.log(keyPath);
+
+    // 检测数据是Object还是Array
+    var json = infoJson;
+    if (keyPath != "") {
+        var pathLists = KeyPathConvertToList(keyPath);
+        for (var key in pathLists) {
+            json = json[pathLists[key]];
+        }
+    }
+    var type = GetJsonType(json[0]);
+
+
+
+    var jsonStr = '"' + json + '"';
+
+    var json = infoJson;
+    if (keyPath != "") {
+        var pathLists = KeyPathConvertToList(keyPath);
+        for (var key in pathLists) {
+            json = json[pathLists[key]];
+        }
+    }
+
+    var html = "";
+    html += "<button onclick='ShowAddArrayJson(" + keyPathStr + ", " + jsonStr + ")'>是</button>";
+
+    var options = {
+        cssBoxWidth: '80%',
+        cssBoxHeight: '80%',
+    };
+    var tipWindow = new PWindow(html, "", options);
+    tipWindow.Show();
 }
 
 /**
  * 增加Array
  */
-function ShowAddArrayJson() {
-
+function ShowAddArrayJson(keyPath, json) {
+    json = {
+        name: "zzbbz",
+        age: 12
+    };
+    TipShadeHidden();
+    ShowAddJson(keyPath, json);
 }
 
 /**

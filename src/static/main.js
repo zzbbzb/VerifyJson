@@ -299,3 +299,13 @@ function PressConfirmDelBtn(keyPath, delIndex, type) {
         ShowMainJson();
     }
 }
+
+/**
+ * 增加
+ */
+function PressAddBtn(keyPath) {
+    var json = {
+
+    };
+    ShowAddJson(keyPath, json)
+}
