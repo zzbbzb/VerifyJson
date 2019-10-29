@@ -2,6 +2,7 @@ var dropZone = document.getElementById('jsonContainer');
 var info = document.getElementById('info');
 
 var infoJson = undefined;
+var addJson = undefined;
 var fileName = ".json";
 
 function handleFileDragStart(e) {
@@ -181,6 +182,10 @@ function ShowMainJson() {
         html += "</div>";
     }
 
+    document.getElementById("addMainBtn").addEventListener('click', function() {
+        PressAddBtn("", true);
+    }, false);
+
     dropZone.innerHTML = html;
 }
 
@@ -208,11 +213,7 @@ dropZone.addEventListener('drop', handleFileDrop, false);
  */
 function PressEditBtn(keyPath) {
 
-    var pathLists = KeyPathConvertToList(keyPath);
-    var json = infoJson;
-    for (var key in pathLists) {
-        json = json[pathLists[key]];
-    }
+    var json = GetPathJson(keyPath);
 
     console.log(json);
 
@@ -266,13 +267,7 @@ function PressConfirmDelBtn(keyPath, delIndex, type) {
     TipShadeHidden();
     console.log(keyPath);
 
-    var json = infoJson;
-    if (keyPath != "") {
-        var pathLists = KeyPathConvertToList(keyPath);
-        for (var key in pathLists) {
-            json = json[pathLists[key]];
-        }
-    }
+    var json = GetPathJson(keyPath);
 
     console.log(json);
 
@@ -303,9 +298,178 @@ function PressConfirmDelBtn(keyPath, delIndex, type) {
 /**
  * 增加
  */
-function PressAddBtn(keyPath) {
-    var json = {
+function PressAddBtn(keyPath, mainFlag, newKeyPath) {
+    newKeyPath = newKeyPath || keyPath;
+    mainFlag = mainFlag || false;
+    var json = GetPathJson(keyPath);
 
-    };
-    ShowAddJson(keyPath, json)
+    var type = GetJsonType(json);
+    if (type == 'Array') {
+        json = json[0];
+        if (GetJsonType(json) == 'Object') {
+            addJson = {};
+        } else {
+            addJson = "";
+        }
+    } else if (type == 'Object') {
+        addJson = {};
+    }
+
+    InitAddJson(json, addJson);
+    AddJson(keyPath, newKeyPath, 'm', mainFlag);
+}
+
+/**
+ * 区别是Array还是Object
+ */
+function AddJson(keyPath, newKeyPath, windowPath, mainFlag) {
+    var keyPathStr = '"' + keyPath + '"';
+    console.log(keyPath);
+
+    // 检测数据是Object还是Array
+    var json = GetPathJson(keyPath);
+    var type = GetJsonType(json[0]);
+
+    if (type == 'Object') {
+        ShowAddObjectJson(keyPath, newKeyPath, windowPath, mainFlag);
+    } else {
+        ShowAddArrayJson(keyPath, newKeyPath, windowPath, mainFlag);
+    }
+}
+
+/**
+ * 初始化addJson 模板
+ */
+function InitAddJson(json, newJson) {
+
+    for (var key in json) {
+        var type = GetJsonType(json[key]);
+        if (type == 'string' || type == 'number') {
+            newJson[key] = "";
+        } else if (type == 'Object') {
+            newJson[key] = {};
+            InitAddJson(json[key], newJson[key]);
+        } else {
+            newJson[key] = []
+            var aType = GetJsonType(json[key][0]);
+            if (aType == 'string' || aType == 'number') {
+                newJson[key][0] = "";
+            } else if (aType == 'Object') {
+                newJson[key][0] = {};
+                InitAddJson(json[key][0], newJson[key][0]);
+            }
+        }
+    }
+}
+
+/**
+ * 判断json是否为空，空为true
+ */
+function JudgeJsonEmpty(json) {
+    if (GetJsonType(json) == 'string' || GetJsonType(json) == 'number') {
+        if (json == "") {
+            return true;
+        }
+    } else {
+        for (var key in json) {
+            if (JudgeJsonEmpty(json[key])) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
+ *  按了确定添加按钮
+ */
+function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
+    if (type == 'Array') { // array number
+        console.log(windowPath);
+        var json = GetPathJson(keyPath);
+        var windowKey = GetPathLastKey(windowPath);
+        if (windowKey != 'm') {
+            var json = GetPathJson(keyPath);
+            var inputKeyStr = "input_" + PathConvertToKey(newKeyPath);
+            var input = document.getElementById(inputKeyStr);
+            if (input.value == "") {
+                WriteInfo("设置值的时候不能为空", True);
+                return;
+            }
+            addJson[windowKey][0] = input.value;
+            // json.push(addJson);
+            TipShadeHidden();
+        } else {
+            var json = GetPathJson(keyPath);
+            var inputKeyStr = "input_" + PathConvertToKey(newKeyPath);
+            var input = document.getElementById(inputKeyStr);
+            if (input.value == "") {
+                WriteInfo("设置值的时候不能为空", True);
+                return;
+            }
+            addJson = input.value;
+            json.push(addJson);
+            if (mainFlag) {
+                dropZone.innerHTML = "";
+                ShowMainJson();
+            } else {
+                TipShadeHidden();
+                TipShadeHidden();
+                ShowArrayJson(keyPath);
+            }
+
+        }
+
+    } else if (type == 'Object') {
+        console.log(windowPath);
+        var json = GetPathJson(keyPath);
+        var windowKey = GetPathLastKey(windowPath);
+        if (windowKey != 'm') {
+            if (GetJsonType(addJson[windowKey]) == 'Array') {
+                var addJ = addJson[windowKey][0];
+                for (var key in addJ) {
+                    if (GetJsonType(addJ[key]) == 'string' || GetJsonType(addJ[key]) == 'number') {
+                        var inputKeyStr = "input_" + PathConvertToKey(newKeyPath) + "_" + key;
+                        var input = document.getElementById(inputKeyStr);
+                        if (input.value == "") {
+                            WriteInfo("设置值的时候不能为空", True);
+                            return;
+                        }
+                        addJ[key] = input.value;
+                    }
+                }
+            }
+            TipShadeHidden();
+        } else { // 主的完成
+            for (var key in addJson) {
+                if (GetJsonType(addJson[key]) == 'string' || GetJsonType(addJson[key]) == 'number') {
+                    var inputKeyStr = "input_" + PathConvertToKey(newKeyPath) + "_" + key;
+                    var input = document.getElementById(inputKeyStr);
+                    if (input.value == "") {
+                        WriteInfo("设置值的时候不能为空", True);
+                        return;
+                    }
+                    addJson[key] = input.value;
+                }
+            }
+
+            // 不为空
+            if (JudgeJsonEmpty(addJson)) {
+                WriteInfo("添加的数据有为空", true);
+                return;
+            }
+
+            json.push(addJson);
+            if (mainFlag) {
+                TipShadeHidden();
+                dropZone.innerHTML = "";
+                ShowMainJson();
+            } else {
+                TipShadeHidden();
+                TipShadeHidden();
+                ShowObjectJson(keyPath);
+            }
+
+        }
+    }
 }

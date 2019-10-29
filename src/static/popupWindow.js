@@ -47,13 +47,21 @@ function TipShadeHidden() {
     thisNode[thisNode.length - 1].parentNode.removeChild(thisNode[thisNode.length - 1]);
 }
 
-function PathConvertToKey(keyPath) {
+function PathConvertToKey(keyPath, num) {
 
+    num = num || 0;
     var keyLists = KeyPathConvertToList(keyPath);
     var key = "J";
 
+    if (num < 0 && num >= keyLists.length) {
+        num = 0;
+    }
+
     for (var i = 0; i < keyLists.length; i++) {
-        key += '_' + keyLists[i];
+        if (i != keyLists.length - num) {
+            key += '_' + keyLists[i];
+        }
+
     }
 
     return key;
@@ -65,6 +73,26 @@ function KeyPathConvertToList(keyPath) {
     }
     var keyLists = keyPath.split('/');
     return keyLists;
+}
+
+function GetPathJson(keyPath) {
+    var json = infoJson;
+    if (keyPath != "") {
+        var pathLists = KeyPathConvertToList(keyPath);
+        for (var key in pathLists) {
+            json = json[pathLists[key]];
+        }
+    }
+    return json;
+}
+
+function GetPathLastKey(keyPath) {
+    var lastKey = "";
+    if (keyPath != "") {
+        var pathLists = KeyPathConvertToList(keyPath);
+        lastKey = pathLists[pathLists.length - 1];
+    }
+    return lastKey;
 }
 
 /**
@@ -97,17 +125,13 @@ function ShowTipWbox() {
  */
 function ShowArrayJson(keyPath) {
 
-    var pathLists = KeyPathConvertToList(keyPath);
-    var json = infoJson;
-    for (var key in pathLists) {
-        json = json[pathLists[key]];
-    }
-
+    var json = GetPathJson(keyPath);
+    var keyPathStr = '"' + keyPath + '"';
     var html = "";
     html += "<div class='cardDiv cardSize_big'>";
     html += "<div id='cardHead'>";
-    html += "<button class='addBtn' id='addBtn' onclick='PressAddBtn()'>添加</button>";
-    var keyPathStr = '"' + keyPath + '"';
+    html += "<button class='addBtn' id='addBtn' onclick='PressAddBtn(" + keyPathStr + ")'>添加</button>";
+
     html += "<button class='editBtn' id='editBtn" + keyPath + "' onclick='PressEditBtn(" + keyPathStr + ")'>编辑</button>";
     html += "</div>";
     html += "<div id='cardContainer'>";
@@ -138,11 +162,7 @@ function ShowArrayJson(keyPath) {
  * Object 显示框
  */
 function ShowObjectJson(keyPath) {
-    var pathLists = KeyPathConvertToList(keyPath);
-    var json = infoJson;
-    for (var key in pathLists) {
-        json = json[pathLists[key]];
-    }
+    var json = GetPathJson(keyPath);
 
     var type = "Object";
     var typeStr = '"' + type + '"';
@@ -219,7 +239,7 @@ function ShowConfirmDel(keyPath, delIndex, type) {
     html += "<div class='confirmDelBtnContent'>";
     html += "<label>是否要删除</label><br>";
     html += "</div>";
-    html += "<div class='confirmDelBtnDiv'>"
+    html += "<div class='confirmBtnDiv'>"
     html += "<button onclick='PressConfirmDelBtn(" + keyPathStr + ", " + delIndexStr + ", " + typeStr + ")'>是</button>";
     html += "<button onclick='TipShadeHidden()'>否</button>";
     html += "</div>";
@@ -233,61 +253,112 @@ function ShowConfirmDel(keyPath, delIndex, type) {
 }
 
 /**
- * 中间增加框
+ * 增加Array number
  */
-function ShowAddJson(keyPath, json) {
-
+function ShowAddArrayJson(keyPath, newKeyPath, windowPath, mainFlag) {
     var keyPathStr = '"' + keyPath + '"';
-    console.log(keyPath);
 
-    // 检测数据是Object还是Array
-    var json = infoJson;
-    if (keyPath != "") {
-        var pathLists = KeyPathConvertToList(keyPath);
-        for (var key in pathLists) {
-            json = json[pathLists[key]];
+    var json = GetPathJson(keyPath);
+
+    var tmpNewKeyPath = newKeyPath;
+    if (keyPath == newKeyPath) {
+        if (newKeyPath = "") {
+            tmpNewKeyPath = length.toString();
+        } else {
+            tmpNewKeyPath = newKeyPath + "/" + json.length;
         }
+    } else {
+        tmpNewKeyPath = newKeyPath + "/0";
     }
-    var type = GetJsonType(json[0]);
 
 
-
-    var jsonStr = '"' + json + '"';
-
-    var json = infoJson;
-    if (keyPath != "") {
-        var pathLists = KeyPathConvertToList(keyPath);
-        for (var key in pathLists) {
-            json = json[pathLists[key]];
-        }
-    }
+    var type = "Array";
+    var typeStr = '"' + type + '"';
 
     var html = "";
-    html += "<button onclick='ShowAddArrayJson(" + keyPathStr + ", " + jsonStr + ")'>是</button>";
+    var keyStr = PathConvertToKey(tmpNewKeyPath);
+    html += "<div class='confirmAddBtnContent'>";
+    html += "<input id='input_" + keyStr + "'>";
+    html += "</div>";
+    html += "<div class='confirmBtnDiv'>"
+    var newKeyStr = '"' + tmpNewKeyPath + '"';
+    var tempWindowStr = '"' + windowPath + '"';
+    var tempMainFlag = '"' + mainFlag + '"';
+    html += "<button onclick='PressConfirmAddBtn(" + keyPathStr + "," + newKeyStr + "," + typeStr + "," + tempWindowStr + "," + tempMainFlag + ")'>是</button>";
+    html += "<button onclick='TipShadeHidden()'>否</button>";
+    html += "</div>";
+
+    var options = {
+        cssBoxWidth: '40%',
+        cssBoxHeight: '20%',
+    };
+
+    var tipWindow = new PWindow(html, "增加页：" + tmpNewKeyPath, options);
+    tipWindow.Show();
+}
+
+/**
+ * 增加Object
+ */
+function ShowAddObjectJson(keyPath, newKeyPath, windowPath, mainFlag) {
+    var keyPathStr = '"' + keyPath + '"';
+
+    var html = "";
+    html += "<div class='confirmAddBtnContent'>";
+
+    var type = 'Object';
+    var typeStr = '"' + type + '"';
+    var json = GetPathJson(keyPath);
+    var length = json.length;
+
+    var tmpNewPath = newKeyPath;
+    if (tmpNewPath == keyPath) {
+        if (tmpNewPath = "") {
+            tmpNewPath = length.toString();
+        } else {
+            tmpNewPath = newKeyPath + "/" + length.toString();
+        }
+    } else {
+        tmpNewPath = newKeyPath + "/0";
+    }
+
+
+    for (var key in json[0]) {
+        var keyStr = PathConvertToKey(tmpNewPath) + "_" + key;
+        html += "<lable for='label_" + keyStr + "'><b>" + key + ":</b></lable>";
+        var jsonType = GetJsonType(json[0][key]);
+        if (jsonType == 'string' || jsonType == 'number') {
+            html += " <input id='input_" + keyStr + "' type='text'><br/>";
+        } else {
+            var tempWindow = windowPath + "/" + key;
+            var funcName = "";
+            var ttKeyPath = keyPath;
+            if (keyPath == "") {
+                ttKeyPath += "0/" + key;
+            } else {
+                ttKeyPath += "/0/" + key;
+            }
+
+            var ttNewPath = tmpNewPath + "/" + key;
+            funcName = 'AddJson("' + ttKeyPath + '","' + ttNewPath + '","' + tempWindow + '","' + mainFlag + '")';
+            html += " <button class='nextJsonBtn' id='button_" + keyStr + "' onclick='" + funcName + "' >增加</button><br/>";
+        }
+    }
+
+    html += "</div>";
+    html += "<div class='confirmBtnDiv'>"
+    var newKeyPathStr = '"' + tmpNewPath + '"';
+    var tempWindowStr = '"' + windowPath + '"';
+    var tempMainFlag = '"' + mainFlag + '"';
+    html += "<button onclick='PressConfirmAddBtn(" + keyPathStr + "," + newKeyPathStr + "," + typeStr + "," + tempWindowStr + "," + tempMainFlag + ")'>是</button>";
+    html += "<button onclick='TipShadeHidden()'>否</button>";
+    html += "</div>";
 
     var options = {
         cssBoxWidth: '80%',
         cssBoxHeight: '80%',
     };
-    var tipWindow = new PWindow(html, "", options);
+
+    var tipWindow = new PWindow(html, "增加页：" + tmpNewPath, options);
     tipWindow.Show();
-}
-
-/**
- * 增加Array
- */
-function ShowAddArrayJson(keyPath, json) {
-    json = {
-        name: "zzbbz",
-        age: 12
-    };
-    TipShadeHidden();
-    ShowAddJson(keyPath, json);
-}
-
-/**
- *增加Object
- */
-function ShowAddObjectJson() {
-
 }
