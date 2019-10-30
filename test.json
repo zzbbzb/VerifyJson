@@ -1,0 +1,79 @@
+[{
+    "skillId": "10001",
+    "skillType": "AddWealth",
+    "value": ["5", "6", "7", "8"]
+}, {
+    "skillId": "10002",
+    "skillType": "AddWealth",
+    "value": [{
+            "skillId": "10003",
+            "skillType": "AddWealth",
+            "value": "500"
+        },
+        {
+            "skillId": "10004",
+            "skillType": "AddWealth_Per",
+            "value": "5"
+        }
+    ]
+}, {
+    "skillId": "10003",
+    "skillType": "AddWealth",
+    "value": [{
+            "skillId": "10003",
+            "skillType": "AddWealth",
+            "value": ["1", "2", "3"]
+        },
+        {
+            "skillId": "10004",
+            "skillType": "AddWealth_Per",
+            "value": [{
+				"name":"zb",
+				"age":"13"
+			},{
+				"name":"zzbbzb",
+				"age":"14"
+			}]
+        }
+    ]
+}, {
+    "skillId": "10004",
+    "skillType": "AddWealth_Per",
+    "value": "5"
+}, {
+    "skillId": "10005",
+    "skillType": "AddWealth_per",
+    "value": "2"
+}, {
+    "skillId": "10006",
+    "skillType": "AddExperience",
+    "value": "100"
+}, {
+    "skillId": "10007",
+    "skillType": "AddExperience",
+    "value": "200"
+}, {
+    "skillId": "10008",
+    "skillType": "AddExperience_per",
+    "value": "0.1"
+}, {
+    "skillId": "10009",
+    "skillType": "AddToolsDrop",
+    "value": "100"
+}, {
+    "skillId": "10010",
+    "skillType": "AddToolsDrop_per",
+    "value": "0.5"
+}, {
+    "skillId": "10011",
+    "skillType": "AddToolsDrop_per",
+    "value": "0.8"
+}, {
+    "skillId": "10012",
+    "skillType": "AddToolsDrop_per",
+    "value": "1000"
+}, {
+    "skillId": "10013",
+    "skillType": "AddWealth",
+    "value": "1000"
+}]

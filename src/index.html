@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>Document</title>
+    <!-- <link rel='stylesheet' href='static/bootstrap.min.css' /> -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src='static/jquery-3.4.1.slim.min.js'></script>
+    <script src='static/popper.min.js'></script>
+    <script src='static/bootstrap.min.js'></script>
+    <script src='static/bootstrap.bundle.min.js'></script> -->
+
+    <link rel='stylesheet' href='static/main.css' />
+
+    <script src='static/popupWindow.js'></script>
+</head>
+
+
+<body>
+    <div id='boxes'></div>
+    <div class='container'>
+        <div class='infoBar'>
+            <div class='infoBox' id='infoBox'>
+                <label class='info' id='info'></label>
+            </div>
+            <button class='tipBox' id='tipBox' onclick='ShowTipWbox()'> 
+                提示
+            </button>
+        </div>
+        <div class='mainContainer mainContainer_margin mainContainer_height mainContainer_border'>
+            <div class='controlStrip'>
+                <button class='addBtn addBtn_size' id='addMainBtn'>添加</button>
+                <button class='editBtn addBtn_size' id='editMainBtn' style="display:none;">编辑</button>
+            </div>
+            <div class='jsonContainer' id='jsonContainer'>
+            </div>
+        </div>
+        <div class='bottomBar'>
+            <!-- <input type='file' name='' class='savePath' id='savePath'></input> -->
+            <button class='saveBtn' id='saveBtn' onclick='SaveJson()'>保存</button>
+        </div>
+    </div>
+
+    <script type='text/javascript' src='static/main.js'></script>
+</body>
+
+</html>

@@ -1,0 +1,228 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+    /* overflow-x: auto; */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.infoBar {
+    display: flex;
+    flex-direction: row;
+    /* border: black solid medium; */
+    min-height: 50px;
+    margin: 1% 1% 1% 1%;
+}
+
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+.mainContainer_margin {
+    margin: 0% 1% 0% 1%;
+}
+
+.mainContainer_height {
+    height: 85%;
+}
+
+.mainContainer_height_window {
+    height: 100%;
+}
+
+.mainContainer_border {
+    border: black solid medium;
+}
+
+.bottomBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    /* border: black solid medium; */
+    margin: 1% 1% 1% 1%;
+    min-height: 50px;
+}
+
+.infoBox {
+    border: black solid thin;
+    width: 80%;
+    margin: 0px 10px 0px 0px;
+}
+
+#info {
+    position: relative;
+    left: 20px;
+    top: 12px;
+    width: 80%;
+}
+
+.tipBox {
+    width: 20%;
+    margin: 0px 0px 0px 0px;
+}
+
+.saveBtn {
+    width: 20%;
+    margin: 0px 0px 0px 0px;
+}
+
+.controlStrip {
+    display: flex;
+    justify-content: flex-end;
+    border-block-end: solid thin black;
+    height: 40px;
+}
+
+.jsonContainer.hovering {
+    -webkit-box-shadow: inset 0px 0px 50px #BBB;
+    -moz-box-shadow: inset 0px 0px 50px #BBB;
+    -o-box-shadow: inset 0px 0px 50px #BBB;
+    box-shadow: inset 0px 0px 50px #BBB;
+}
+
+.jsonContainer {
+    /* border: medium black solid; */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    height: 100%;
+}
+
+#info.error {
+    color: red;
+}
+
+.cardDiv {
+    border: thin black solid;
+    /* flex-grow: 1; */
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.card_margin {
+    margin: 2% 2% 0% 2%;
+}
+
+.card_shadow {
+    box-shadow: 10px 10px 5px #888888;
+}
+
+.cardSize_small {
+    width: 20%;
+    height: 40%;
+}
+
+.cardSize_big {
+    width: 100%;
+    height: 100%;
+}
+
+#cardHead {
+    display: flex;
+    justify-content: flex-end;
+    border-block-end: solid thin black;
+    /* height: 15%; */
+}
+
+.editBtn {
+    margin: 5px;
+}
+
+.addBtn {
+    margin: 5px;
+}
+
+.addBtn_size {
+    width: 60px;
+    height: 30px;
+}
+
+.delBtn {
+    margin: 5px;
+}
+
+.shade {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 10;
+}
+
+.wbox {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    /* width: 50%;
+    height: 40%; */
+    border-radius: 5px;
+    margin: 5% auto;
+    border: black solid medium;
+}
+
+#boxHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 40px;
+    background: #888888;
+    border-radius: 2px 2px 0px 0px;
+}
+
+.boxHeaderName {
+    position: relative;
+    /* border: black solid thin; */
+    top: 6px;
+    left: 2%;
+}
+
+#close {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    background: red;
+    color: #fff;
+    right: 5px;
+    top: 6px;
+    text-align: center;
+}
+
+#boxContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.confirmBtnDiv {
+    display: flex;
+    justify-content: space-around;
+}
+
+.confirmDelBtnContent {
+    text-align: center;
+    margin: 20px;
+}
+
+.confirmAddBtnContent {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
