@@ -393,7 +393,7 @@ function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
             var inputKeyStr = "input_" + PathConvertToKey(newKeyPath);
             var input = document.getElementById(inputKeyStr);
             if (input.value == "") {
-                WriteInfo("设置值的时候不能为空", True);
+                WriteInfo("设置值的时候不能为空", true);
                 return;
             }
             addJson[windowKey][0] = input.value;
@@ -404,7 +404,7 @@ function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
             var inputKeyStr = "input_" + PathConvertToKey(newKeyPath);
             var input = document.getElementById(inputKeyStr);
             if (input.value == "") {
-                WriteInfo("设置值的时候不能为空", True);
+                WriteInfo("设置值的时候不能为空", true);
                 return;
             }
             addJson = input.value;
@@ -433,7 +433,7 @@ function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
                         var inputKeyStr = "input_" + PathConvertToKey(newKeyPath) + "_" + key;
                         var input = document.getElementById(inputKeyStr);
                         if (input.value == "") {
-                            WriteInfo("设置值的时候不能为空", True);
+                            WriteInfo("设置值的时候不能为空", true);
                             return;
                         }
                         addJ[key] = input.value;
@@ -447,7 +447,7 @@ function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
                     var inputKeyStr = "input_" + PathConvertToKey(newKeyPath) + "_" + key;
                     var input = document.getElementById(inputKeyStr);
                     if (input.value == "") {
-                        WriteInfo("设置值的时候不能为空", True);
+                        WriteInfo("设置值的时候不能为空", true);
                         return;
                     }
                     addJson[key] = input.value;
@@ -472,5 +472,19 @@ function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
             }
 
         }
+    }
+}
+
+function SaveInputValue(keyPath, newKeyPath, key, windowPath, mainFlag, value) {
+    console.log(key);
+    console.log(windowPath);
+    console.log(value);
+    var windowKey = GetPathLastKey(windowPath);
+    if (windowKey == 'm') {
+        if (GetJsonType(addJson[key]) == 'string' || GetJsonType(addJson[key]) == 'number') {
+            addJson[key] = value;
+        }
+        TipShadeHidden();
+        ShowAddObjectJson(keyPath, newKeyPath, windowPath, mainFlag)
     }
 }

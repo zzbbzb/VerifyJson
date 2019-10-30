@@ -278,7 +278,12 @@ function ShowAddArrayJson(keyPath, newKeyPath, windowPath, mainFlag) {
     var html = "";
     var keyStr = PathConvertToKey(tmpNewKeyPath);
     html += "<div class='confirmAddBtnContent'>";
-    html += "<input id='input_" + keyStr + "'>";
+    var inputValue = "";
+    var windowKey = GetPathLastKey(windowPath);
+    if (windowKey != 'm') {
+        inputValue = addJson[windowKey][0];
+    }
+    html += "<input id='input_" + keyStr + "' value='" + inputValue + "'  >";
     html += "</div>";
     html += "<div class='confirmBtnDiv'>"
     var newKeyStr = '"' + tmpNewKeyPath + '"';
@@ -302,6 +307,7 @@ function ShowAddArrayJson(keyPath, newKeyPath, windowPath, mainFlag) {
  */
 function ShowAddObjectJson(keyPath, newKeyPath, windowPath, mainFlag) {
     var keyPathStr = '"' + keyPath + '"';
+    var newKeyPathStr = '"' + newKeyPath + '"';
 
     var html = "";
     html += "<div class='confirmAddBtnContent'>";
@@ -328,7 +334,17 @@ function ShowAddObjectJson(keyPath, newKeyPath, windowPath, mainFlag) {
         html += "<lable for='label_" + keyStr + "'><b>" + key + ":</b></lable>";
         var jsonType = GetJsonType(json[0][key]);
         if (jsonType == 'string' || jsonType == 'number') {
-            html += " <input id='input_" + keyStr + "' type='text'><br/>";
+            var kStr = '"' + key + '"';
+            var tempWindowStr = '"' + windowPath + '"';
+            var windowKey = GetPathLastKey(windowPath);
+            var inputValue = '';
+            if (windowKey != 'm') {
+                inputValue = addJson[windowKey][0][key];
+            } else {
+                inputValue = addJson[key];
+            }
+            var tempMainFlag = '"' + mainFlag + '"';
+            html += " <input id='input_" + keyStr + "' type='text' value='" + inputValue + "' onchange ='SaveInputValue(" + keyPathStr + "," + newKeyPathStr + "," + kStr + "," + tempWindowStr + "," + tempMainFlag + ",this.value)'><br/>";
         } else {
             var tempWindow = windowPath + "/" + key;
             var funcName = "";
@@ -362,3 +378,4 @@ function ShowAddObjectJson(keyPath, newKeyPath, windowPath, mainFlag) {
     var tipWindow = new PWindow(html, "增加页：" + tmpNewPath, options);
     tipWindow.Show();
 }
+12
