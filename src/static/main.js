@@ -5,6 +5,7 @@ var infoJson = undefined;
 var addJson = undefined;
 var fileName = ".json";
 
+var indexType = '';
 var modifyPath = []; // json 修改的位置
 
 function handleFileDragStart(e) {
@@ -87,6 +88,7 @@ function handleFileDrop(e) { // TODO 代码优化
             WriteInfo("文件不能为空", true);
         }
 
+        indexType = '';
         modifyPath = [];
 
         infoJson = JSON.parse(fileText);
@@ -116,7 +118,29 @@ function handleFileDrop(e) { // TODO 代码优化
         // dropZone.innerHTML = str;
 
         // 进行布局
-        ShowMainJson();
+        if (typeof(infoJson) == "undefined") {
+            return;
+        }
+
+        if (GetJsonType(infoJson) != 'Array') {
+            WriteInfo("json要是数组json,最外层加个[]", true);
+            return;
+        }
+
+        document.getElementById("addMainBtn").addEventListener('click', function() {
+            PressAddBtn("", true);
+        }, false);
+
+        document.getElementById("editMainBtn").addEventListener('click', function() {
+            PressEditBtn("");
+        }, false);
+
+        if (GetJsonType(infoJson[0]) == 'Object') {
+            ShowMainJson();
+        } else {
+            ShowMainArrayJson();
+        }
+
     };
 };
 
@@ -159,21 +183,42 @@ function GetJsonType(json) {
     }
 }
 
-function ShowMainJson() {
-    var html = "";
-    if (typeof(infoJson) == "undefined") {
-        return;
-    }
+function ShowMainArrayJson() {
 
-    if (GetJsonType(infoJson) != 'Array') {
-        WriteInfo("json要是数组json,最外层加个[]", true);
-        return;
-    }
-
+    document.getElementById("editMainBtn").style.display = 'block';
+    indexType = 'MainArray';
     var type = "Main";
     var typeStr = '"' + type + '"';
 
-    // TODO适应各种json
+    var keyPath = "";
+    var pKeyPath = '"' + keyPath + '"';
+
+    var html = "";
+    html += "<div class='cardDiv cardSize_big'>";
+    html += "<div id='cardContainer'>";
+
+    var typeStr = '"' + type + '"';
+    // 进行布局
+    for (var key in infoJson) {
+        var keyStr = PathConvertToKey(keyPath) + "_" + key;
+        var keyPathStr = '"' + keyPath + '"';
+        html += "<label>" + key + ":  </label><input id='input_" + keyStr + "' type='text' value='" + infoJson[key] + "' readonly='readonly' disabled='disabled'>";
+        var delkeyStr = '"' + key + '"';
+        html += "<button class='delBtn' id='delBtn_" + keyStr + "' onclick='PressDelBtn(" + keyPathStr + "," + delkeyStr + "," + typeStr + ")'>删除" + key + "</button><br/>";
+    }
+
+    html += "</div>";
+    html += "</div>";
+
+    dropZone.innerHTML = html;
+}
+
+function ShowMainJson() {
+    var html = "";
+    indexType = "Main";
+    var type = "Main";
+    var typeStr = '"' + type + '"';
+
     var keyPath = "";
     var pKeyPath = '"' + keyPath + '"';
     for (var i = 0; i < GetJsonLength(infoJson); i++) {
@@ -218,10 +263,6 @@ function ShowMainJson() {
         html += "</div>";
     }
 
-    document.getElementById("addMainBtn").addEventListener('click', function() {
-        PressAddBtn("", true);
-    }, false);
-
     dropZone.innerHTML = html;
 }
 
@@ -254,6 +295,9 @@ function PressEditBtn(keyPath) {
     console.log(json);
 
     var btnName = "editBtn" + keyPath;
+    if (indexType == "MainArray") {
+        btnName = "editMainBtn";
+    }
     var keyPathStr = PathConvertToKey(keyPath);
     var btn = document.getElementById(btnName);
     if (btn.innerText == '编辑') {
@@ -327,7 +371,12 @@ function PressConfirmDelBtn(keyPath, delIndex, type) {
         ShowObjectJson(keyPath);
     } else if (type == "Main") {
         dropZone.innerHTML = "";
-        ShowMainJson();
+        if (indexType == 'Main') {
+            ShowMainJson();
+        } else if (indexType == 'MainArray') {
+            ShowMainArrayJson();
+        }
+
     }
 }
 
@@ -487,7 +536,11 @@ function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
             if (mainFlag === 'true') {
                 TipShadeHidden();
                 dropZone.innerHTML = "";
-                ShowMainJson();
+                if (indexType == 'Main') {
+                    ShowMainJson();
+                } else if (indexType == 'MainArray') {
+                    ShowMainArrayJson();
+                }
             } else {
                 TipShadeHidden();
                 TipShadeHidden();
