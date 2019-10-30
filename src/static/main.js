@@ -5,6 +5,8 @@ var infoJson = undefined;
 var addJson = undefined;
 var fileName = ".json";
 
+var modifyPath = []; // json 修改的位置
+
 function handleFileDragStart(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -76,7 +78,39 @@ function handleFileDrop(e) { // TODO 代码优化
     reader.onload = function() {
         var fileText = reader.result;
         // var jsonText = JSON.stringify(fileText);
+        fileText = fileText.trim();
+        if (fileText.length > 0) {
+            if (fileText[0] == '{') {
+                fileText = '[' + fileText + ']';
+            }
+        } else {
+            WriteInfo("文件不能为空", true);
+        }
+
+        modifyPath = [];
+
         infoJson = JSON.parse(fileText);
+        InitJson(infoJson, "", GetJsonType(infoJson));
+
+        for (var path in modifyPath) {
+            var keyLists = KeyPathConvertToList(modifyPath[path]);
+            var json = infoJson;
+            var newJson = infoJson;
+            for (var i = 0; i < keyLists.length; i++) {
+                json = json[keyLists[i]];
+            }
+
+            for (var i = 0; i < keyLists.length - 1; i++) {
+                newJson = newJson[keyLists[i]];
+            }
+
+            var t = json;
+            var kt = [];
+            kt.push(t);
+            json = kt;
+            newJson[keyLists[keyLists.length - 1]] = json;
+        }
+
         info.innerHTML = "成功读取文件,共" + GetJsonLength(infoJson) + "个";
         var str = "";
         // dropZone.innerHTML = str;
@@ -167,15 +201,17 @@ function ShowMainJson() {
                 }
 
                 var funcName = "";
-                if (GetJsonType(infoJson[i][key][0]) == "Object") {
-                    var tmpkeyPath = keyPath + "/" + key;
-                    funcName = 'ShowObjectJson("' + tmpkeyPath + '")';
-                } else {
-                    var tmpkeyPath = keyPath + "/" + key;
-                    funcName = 'ShowArrayJson("' + tmpkeyPath + '")';
-                }
+                if (GetJsonType(infoJson[i][key]) == "Array") {
+                    if (GetJsonType(infoJson[i][key][0]) == "Object") {
+                        var tmpkeyPath = keyPath + "/" + key;
+                        funcName = 'ShowObjectJson("' + tmpkeyPath + '")';
+                    } else {
+                        var tmpkeyPath = keyPath + "/" + key;
+                        funcName = 'ShowArrayJson("' + tmpkeyPath + '")';
+                    }
 
-                html += " <button class='nextJsonBtn' id='button_" + keyStr + "' onclick='" + funcName + "' >展开</button><br/>";
+                    html += " <button class='nextJsonBtn' id='button_" + keyStr + "' onclick='" + funcName + "' >展开</button><br/>";
+                }
             }
         }
         html += "</div>";
@@ -361,6 +397,45 @@ function InitAddJson(json, newJson) {
         }
     }
 }
+
+/**
+ * 初始化json ,把json中object用[] 括起来
+ */
+function InitJson(json, path, lastType) {
+
+    if (GetJsonType(json) != 'string' && GetJsonType(json) != 'number') {
+        if (GetJsonType(json) == 'Object') {
+            if (lastType == 'Object') {
+                modifyPath.push(path);
+            }
+        }
+    }
+
+    for (var key in json) {
+        if (lastType == 'Object') {
+            if (GetJsonType(json[key]) != 'string' && GetJsonType(json[key]) != 'number') {
+                var aPath = "";
+                if (path == "") {
+                    aPath = key;
+                } else {
+                    aPath = path + "/" + key;
+                }
+                InitJson(json[key], aPath, GetJsonType(json));
+            }
+        } else if (lastType == 'Array') {
+            var aPath = "";
+            if (path == "") {
+                aPath = key;
+            } else {
+                aPath = path + "/" + key;
+            }
+
+            InitJson(json[key], aPath, GetJsonType(json));
+
+        }
+    }
+}
+
 
 /**
  * 判断json是否为空，空为true
