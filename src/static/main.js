@@ -520,7 +520,8 @@ function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
                 WriteInfo("设置值的时候不能为空", true);
                 return;
             }
-            addJson[windowKey][0] = input.value;
+            var tmpAddJson = GetAddJsonByPath(GetPathExceptFirst(windowPath));
+            tmpAddJson[0] = input.value;
             // json.push(addJson);
             TipShadeHidden();
         } else {
@@ -554,8 +555,9 @@ function PressConfirmAddBtn(keyPath, newKeyPath, type, windowPath, mainFlag) {
         var json = GetPathJson(keyPath);
         var windowKey = GetPathLastKey(windowPath);
         if (windowKey != 'm') {
-            if (GetJsonType(addJson[windowKey]) == 'Array') {
-                var addJ = addJson[windowKey][0];
+            var tmpAddJson = GetAddJsonByPath(GetPathExceptFirst(windowPath));
+            if (GetJsonType(tmpAddJson) == 'Array') {
+                var addJ = tmpAddJson[0];
                 for (var key in addJ) {
                     if (GetJsonType(addJ[key]) == 'string' || GetJsonType(addJ[key]) == 'number') {
                         var inputKeyStr = "input_" + PathConvertToKey(newKeyPath) + "_" + key;

@@ -95,6 +95,30 @@ function GetPathLastKey(keyPath) {
     return lastKey;
 }
 
+function GetPathExceptFirst(keyPath) {
+    var lastKey = [];
+    if (keyPath != "") {
+        var pathLists = KeyPathConvertToList(keyPath);
+        if (pathLists.length > 1) {
+            for (var i = 1; i < pathLists.length; i++) {
+                lastKey.push(pathLists[i]);
+            }
+        }
+    }
+    return lastKey;
+}
+
+function GetAddJsonByPath(path) {
+    var json = addJson;
+    for (var i = 0; i < path.length; i++) {
+        json = json[path[i]];
+        if (i != path.length - 1) {
+            json = json[0];
+        }
+    }
+    return json;
+}
+
 /**
  * 显示提示框
  */
@@ -281,7 +305,8 @@ function ShowAddArrayJson(keyPath, newKeyPath, windowPath, mainFlag) {
     var inputValue = "";
     var windowKey = GetPathLastKey(windowPath);
     if (windowKey != 'm') {
-        inputValue = addJson[windowKey][0];
+        var tmpAddJson = GetAddJsonByPath(GetPathExceptFirst(windowPath));
+        inputValue = tmpAddJson[0];
     }
     html += "<input id='input_" + keyStr + "' value='" + inputValue + "'  >";
     html += "</div>";
@@ -339,7 +364,8 @@ function ShowAddObjectJson(keyPath, newKeyPath, windowPath, mainFlag) {
             var windowKey = GetPathLastKey(windowPath);
             var inputValue = '';
             if (windowKey != 'm') {
-                inputValue = addJson[windowKey][0][key];
+                var tmpAddJson = GetAddJsonByPath(GetPathExceptFirst(windowPath));
+                inputValue = tmpAddJson[0][key];
             } else {
                 inputValue = addJson[key];
             }
@@ -378,4 +404,3 @@ function ShowAddObjectJson(keyPath, newKeyPath, windowPath, mainFlag) {
     var tipWindow = new PWindow(html, "增加页：" + tmpNewPath, options);
     tipWindow.Show();
 }
-12
