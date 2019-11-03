@@ -135,6 +135,8 @@ function handleFileDrop(e) { // TODO 代码优化
             PressEditBtn("");
         }, false);
 
+        dropZone.innerHTML = "";
+
         if (GetJsonType(infoJson[0]) == 'Object') {
             ShowMainJson();
         } else {
