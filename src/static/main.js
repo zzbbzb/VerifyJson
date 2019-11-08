@@ -8,6 +8,20 @@ var fileName = ".json";
 var indexType = '';
 var modifyPath = []; // json 修改的位置
 
+document.getElementById("addMainBtn").addEventListener('click', function() {
+    if(typeof(infoJson) != 'undefined')
+    {
+        PressAddBtn("", true);
+    }
+}, false);
+
+document.getElementById("editMainBtn").addEventListener('click', function() {
+    if(typeof(infoJson) != 'undefined')
+    {
+        PressEditBtn("");
+    }
+}, false);
+
 function handleFileDragStart(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -126,16 +140,6 @@ function handleFileDrop(e) { // TODO 代码优化
             WriteInfo("json要是数组json,最外层加个[]", true);
             return;
         }
-
-        document.getElementById("addMainBtn").addEventListener('click', function() {
-            PressAddBtn("", true);
-        }, false);
-
-        document.getElementById("editMainBtn").addEventListener('click', function() {
-            PressEditBtn("");
-        }, false);
-
-        dropZone.innerHTML = "";
 
         if (GetJsonType(infoJson[0]) == 'Object') {
             ShowMainJson();
