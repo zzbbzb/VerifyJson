@@ -331,6 +331,24 @@ function PressEditBtn(keyPath) {
             var jsonType = GetJsonType(json[key]);
             if (jsonType == 'string' || jsonType == 'number' || jsonType == 'boolean') {
                 var jsonValue = document.getElementById(keyName).value;
+                if(jsonType == 'number')
+                {
+                    jsonValue = Number(jsonValue);
+                }
+                else if(jsonType == 'boolean')
+                {
+                    jsonValue = jsonValue.toLowerCase();
+                    if(jsonValue == 'true')
+                    {
+                        jsonValue = true;
+                    }
+                    else
+                    {
+                        jsonValue = false;
+                    }   
+                }
+                var type = GetJsonType(jsonValue);
+                console.log(jsonValue + "," + type);
                 json[key] = jsonValue;
             }
         }
