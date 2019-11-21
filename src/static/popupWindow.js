@@ -207,7 +207,7 @@ function ShowObjectJson(keyPath) {
             var keyStr = PathConvertToKey(tmpkeyPath) + "_" + key;
             html += "<lable for='label_" + keyStr + "'><b>" + key + ":</b></lable>";
             var jsonType = GetJsonType(json[i][key]);
-            if (jsonType == 'string' || jsonType == 'number') {
+            if (jsonType == 'string' || jsonType == 'number' || jsonType == 'boolean') {
                 html += " <input id='input_" + keyStr + "' type='text' value='" + json[i][key] + "' readonly='readonly' disabled='disabled'><br/>";
             } else {
                 var jsonLen = GetJsonLength(json[i][key]);
