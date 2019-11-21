@@ -242,7 +242,7 @@ function ShowMainJson() {
             var keyStr = PathConvertToKey(keyPath) + "_" + key;
             html += "<lable for='label_" + keyStr + "'><b>" + key + ":</b></lable>";
             var jsonType = GetJsonType(infoJson[i][key]);
-            if (jsonType == 'string' || jsonType == 'number') {
+            if (jsonType == 'string' || jsonType == 'number' || jsonType == 'boolean') {
                 html += " <input id='input_" + keyStr + "' type='text' value='" + infoJson[i][key] + "' readonly='readonly' disabled='disabled'><br/>";
             } else {
                 var jsonLen = GetJsonLength(infoJson[i][key]);
@@ -309,7 +309,7 @@ function PressEditBtn(keyPath) {
     if (btn.innerText == '编辑') {
         for (var key in json) {
             var jsonType = GetJsonType(json[key]);
-            if (jsonType == 'string' || jsonType == 'number') {
+            if (jsonType == 'string' || jsonType == 'number' || jsonType == 'boolean') {
                 var keyName = 'input_' + keyPathStr + '_' + key;
                 document.getElementById(keyName).removeAttribute('readonly');
                 document.getElementById(keyName).removeAttribute('disabled');
@@ -319,7 +319,7 @@ function PressEditBtn(keyPath) {
     } else if (btn.innerText == '完成') {
         for (var key in json) {
             var jsonType = GetJsonType(json[key]);
-            if (jsonType == 'string' || jsonType == 'number') {
+            if (jsonType == 'string' || jsonType == 'number' || jsonType == 'boolean') {
                 var keyName = "input_" + keyPathStr + "_" + key;
                 document.getElementById(keyName).readOnly = "readonly";
                 document.getElementById(keyName).disabled = "disabled";
@@ -329,7 +329,7 @@ function PressEditBtn(keyPath) {
         for (var key in json) {
             var keyName = "input_" + keyPathStr + "_" + key;
             var jsonType = GetJsonType(json[key]);
-            if (jsonType == 'string' || jsonType == 'number') {
+            if (jsonType == 'string' || jsonType == 'number' || jsonType == 'boolean') {
                 var jsonValue = document.getElementById(keyName).value;
                 json[key] = jsonValue;
             }
