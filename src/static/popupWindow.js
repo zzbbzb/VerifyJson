@@ -351,7 +351,7 @@ function ShowAddObjectJson(keyPath, newKeyPath, windowPath, mainFlag) {
         var keyStr = PathConvertToKey(tmpNewPath) + "_" + key;
         html += "<lable for='label_" + keyStr + "'><b>" + key + ":</b></lable>";
         var jsonType = GetJsonType(json[0][key]);
-        if (jsonType == 'string' || jsonType == 'number') {
+        if (jsonType == 'string' || jsonType == 'number' || jsonType == 'boolean') {
             var kStr = '"' + key + '"';
             var tempWindowStr = '"' + windowPath + '"';
             var windowKey = GetPathLastKey(windowPath);
